@@ -1,6 +1,5 @@
 package com.sun_asterisk.moviedb_50.data.model
 
-
 data class Movie(
     var movieID: Int?,
     var movieTitle: String?,
@@ -25,9 +24,4 @@ data class Movie(
         const val POPULARITY = "popularity"
         const val RELEASE_DATE = "release_date"
     }
-
-    override fun toString(): String {
-        return "Movie(mId=$movieID, mTitle=$movieTitle, mOverview=$movieOverview, mPosterPath=$moviePosterPath, mBackdropPath=$movieBackdropPath, mVoteCount=$movieVoteCount, mVoteAverage=$movieVoteAverage, mPopularity=$moviePopularity, mReleaseDate=$movieReleaseDate, mGenreId=${movieGenreID?.contentToString()})"
-    }
-
 }

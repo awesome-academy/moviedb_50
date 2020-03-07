@@ -5,30 +5,18 @@ import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.source.DataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GetDataJson
 
-
 class RemoteDataSource : DataSource.RemoteDataSource {
 
-    override fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<Genres>?) {
-        val getDataJson =
-            GetDataJson(
-                onFetchDataJsonListener
-            )
-        getDataJson.genres()
+    override fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>) {
+        GetDataJson(onFetchDataJsonListener).genres()
     }
 
-    override fun getMovie(onFetchDataJsonListener: OnFetchDataJsonListener<Movie>?, type: String) {
+    override fun getMovie(type: String, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>) {
         TODO("Not yet implemented")
     }
 
-
     companion object {
-        private var sInstance: RemoteDataSource? = null
-        fun getsInstance(): RemoteDataSource? {
-            if (sInstance == null) {
-                sInstance =
-                    RemoteDataSource()
-            }
-            return sInstance
-        }
+        private var instance: RemoteDataSource? = null
+        fun getInstance() = instance ?: RemoteDataSource().also { instance = it }
     }
 }

@@ -9,14 +9,15 @@ import java.net.URL
 class ParseDataWithJson {
 
     @Throws(Exception::class)
-    fun getJsonFromUrl(urlString: String?): String? {
-        val url: URL = URL(urlString)
-        val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.connectTimeout = Constant.TIME_OUT
-        httpURLConnection.readTimeout = Constant.TIME_OUT
-        httpURLConnection.requestMethod = Constant.METHOD_GET
-        httpURLConnection.doOutput = true
-        httpURLConnection.connect()
+    fun getJsonFromUrl(urlString: String?): String {
+        val url = URL(urlString)
+        val httpURLConnection: HttpURLConnection = (url.openConnection() as HttpURLConnection).apply {
+            connectTimeout = Constant.TIME_OUT
+            readTimeout = Constant.TIME_OUT
+            requestMethod = Constant.METHOD_GET
+            doOutput = true
+            connect()
+        }
         val bufferedReader =
             BufferedReader(InputStreamReader(url.openStream()))
         val stringBuilder = StringBuilder()
@@ -28,5 +29,4 @@ class ParseDataWithJson {
         httpURLConnection.disconnect()
         return stringBuilder.toString()
     }
-
 }

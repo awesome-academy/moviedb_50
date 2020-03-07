@@ -1,9 +1,8 @@
 package com.sun_asterisk.moviedb_50.data.model
 
-
 data class Genres(
-    val genresID: Int,
-    val genresName: String
+    val genresID: Int?,
+    val genresName: String?
 ) {
     object GenresEntry {
         const val GENRES_LIST = "genres"

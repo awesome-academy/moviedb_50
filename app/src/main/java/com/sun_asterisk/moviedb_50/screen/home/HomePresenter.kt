@@ -1,19 +1,14 @@
 package com.sun_asterisk.moviedb_50.screen.home
 
-import android.util.Log
 import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 import com.sun_asterisk.moviedb_50.data.source.remote.Repository
 
-
-class HomePresenter(private val mRepository: Repository?) :
-    HomeContract.Presenter {
+class HomePresenter(private val repository: Repository) : HomeContract.Presenter {
     private var view: HomeContract.View? = null
-    override fun onStart() {
 
-    }
-
+    override fun onStart() {}
     override fun onStop() {}
     override fun setView(view: HomeContract.View?) {
         this.view = view
@@ -21,32 +16,28 @@ class HomePresenter(private val mRepository: Repository?) :
 
     override
     fun getGenres() {
-        mRepository?.getGenres(object :
-            OnFetchDataJsonListener<Genres> {
+        repository.getGenres(object : OnFetchDataJsonListener<MutableList<Genres>> {
 
             override fun onError(e: Exception) {
-                Log.i("onError", e.toString())
-                view!!.onError(e)
+                view?.onError(e)
             }
 
             override fun onSuccess(data: MutableList<Genres>?) {
-                view!!.onGetGenresSuccess(data)
+                view?.onGetGenresSuccess(data)
             }
         })
     }
 
     override fun getMovie(type: String) {
-        mRepository?.getMovies(object :
-            OnFetchDataJsonListener<Movie> {
+        repository.getMovies(type, object : OnFetchDataJsonListener<MutableList<Movie>> {
 
             override fun onError(e: Exception) {
-                Log.i("onError", e.toString())
-                view!!.onError(e)
+                view?.onError(e)
             }
 
             override fun onSuccess(data: MutableList<Movie>?) {
-                view!!.onGetMovieSuccess(data)
+                view?.onGetMovieSuccess(data)
             }
-        }, type)
+        })
     }
 }
