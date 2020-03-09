@@ -1,3 +1,7 @@
 <resources>
   <string name="app_name">moviedb_50</string>
+  <string name="movie_name">I Will Find You A Better Home</string>
+  <string name="navigation_home">Home</string>
+  <string name="navigation_favorite">Favorite</string>
+  <string name="internet_fail">Check internet connection!</string>
 </resources>
