@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <font-family xmlns:app="http://schemas.android.com/apk/res-auto"
+<<<<<<< HEAD
   app:fontProviderAuthority="com.google.android.gms.fonts"
   app:fontProviderPackage="com.google.android.gms"
   app:fontProviderQuery="Ubuntu"
   app:fontProviderCerts="@array/com_google_android_gms_fonts_certs"></font-family>
+=======
+    app:fontProviderAuthority="com.google.android.gms.fonts"
+    app:fontProviderPackage="com.google.android.gms"
+    app:fontProviderQuery="Ubuntu"
+    app:fontProviderCerts="@array/com_google_android_gms_fonts_certs"></font-family>
+>>>>>>> origin/Task_2

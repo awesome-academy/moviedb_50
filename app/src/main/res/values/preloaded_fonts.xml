@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
   <array name="preloaded_fonts" translatable="false">
     <item>@font/pt_serif</item>
     <item>@font/ubuntu</item>
     <item>@font/ubuntu_light</item>
   </array>
+=======
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/pt_serif</item>
+        <item>@font/ubuntu</item>
+        <item>@font/ubuntu_light</item>
+    </array>
+>>>>>>> origin/Task_2
 </resources>
