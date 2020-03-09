@@ -15,6 +15,6 @@ interface DataSource {
      */
     interface RemoteDataSource {
         fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>)
-        fun getMovie(type: String, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>)
+        fun getMovies(type: String,genresID:Int, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>)
     }
 }

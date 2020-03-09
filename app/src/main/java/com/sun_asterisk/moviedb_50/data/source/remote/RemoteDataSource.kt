@@ -3,16 +3,18 @@ package com.sun_asterisk.moviedb_50.data.source.remote
 import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.source.DataSource
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GetDataJson
+import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GetGenresJsonAsync
+import com.sun_asterisk.moviedb_50.utils.Constant
 
 class RemoteDataSource : DataSource.RemoteDataSource {
 
     override fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>) {
-        GetDataJson(onFetchDataJsonListener).genres()
+        val url =
+            Constant.BASE_URL + Constant.BASE_GENRES_LIST + Constant.BASE_API_KEY + Constant.BASE_LANGUAGE
+        GetGenresJsonAsync(onFetchDataJsonListener).execute(url)
     }
 
-    override fun getMovie(type: String, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>) {
-        TODO("Not yet implemented")
+    override fun getMovies(type: String, genresID: Int, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>) {
     }
 
     companion object {

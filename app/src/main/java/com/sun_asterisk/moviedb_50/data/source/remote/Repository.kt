@@ -13,10 +13,10 @@ class Repository private constructor(
     }
 
     fun getMovies(
-        type: String,
+        type: String,genresID:Int,
         onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>?
     ) {
-        onFetchDataJsonListener?.let { remoteDataSource.getMovie(type, it) }
+        onFetchDataJsonListener?.let { remoteDataSource.getMovies(type,genresID, it) }
     }
 
     companion object {

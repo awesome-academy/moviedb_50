@@ -28,7 +28,7 @@ class HomePresenter(private val repository: Repository) : HomeContract.Presenter
         })
     }
 
-    override fun getMovie(type: String) {
+    override fun getMovies(type: String, genresID: Int) {
         repository.getMovies(type, object : OnFetchDataJsonListener<MutableList<Movie>> {
 
             override fun onError(e: Exception) {

@@ -19,6 +19,6 @@ interface HomeContract {
      */
     interface Presenter : BasePresenter<View?> {
         fun getGenres()
-        fun getMovie(type: String)
+        fun getMovies(type: String, genresID:Int)
     }
 }

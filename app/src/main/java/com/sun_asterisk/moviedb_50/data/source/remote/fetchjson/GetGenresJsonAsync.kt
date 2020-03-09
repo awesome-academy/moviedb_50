@@ -6,7 +6,7 @@ import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 import org.json.JSONException
 import org.json.JSONObject
 
-class GetJsonFromUrl(private val listener: OnFetchDataJsonListener<MutableList<Genres>>) :
+class GetGenresJsonAsync(private val listener: OnFetchDataJsonListener<MutableList<Genres>>) :
     AsyncTask<String?, Void?, String?>() {
 
     override fun onPostExecute(data: String?) {

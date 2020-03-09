@@ -26,7 +26,7 @@ class HomeFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.activity_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
         if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
             val repository: Repository =
                 Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource)

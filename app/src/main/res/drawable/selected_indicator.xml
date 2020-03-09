@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-<<<<<<< HEAD
   <item>
     <shape
       android:innerRadius="0dp"
@@ -10,15 +9,4 @@
       <solid android:color="@color/colorOrange" />
     </shape>
   </item>
-=======
-    <item>
-        <shape
-            android:innerRadius="0dp"
-            android:shape="ring"
-            android:thickness="3dp"
-            android:useLevel="false">
-            <solid android:color="@color/colorOrange" />
-        </shape>
-    </item>
->>>>>>> origin/Task_2
 </layer-list>

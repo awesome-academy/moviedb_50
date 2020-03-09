@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -17,7 +16,8 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.tabs.TabLayout
       android:id="@+id/indicator"
@@ -117,7 +117,7 @@
       android:layout_marginEnd="@dimen/dp16"
       android:layout_marginBottom="@dimen/dp16"
       android:fontFamily="@font/pt_serif"
-      android:text="Upcoming"
+      android:text="@string/upcoming"
       android:textColor="@color/colorOrange"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"
@@ -144,149 +144,4 @@
       app:layout_constraintVertical_bias="0.0" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/slider_pager"
-            android:layout_width="0dp"
-            android:layout_height="275dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/slider_pager"
-            app:tabBackground="@drawable/indicator_selector"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp">
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/pt_serif"
-            android:text="@string/movies"
-            android:textColor="@color/colorOrange"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/indicator" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabMovieByKey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="scrollable">
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_movie_genres"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp8"
-            android:layout_marginEnd="@dimen/dp8"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabMovieByKey" />
-
-        <TextView
-            android:id="@+id/txt_week_movies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp16"
-            android:layout_marginTop="@dimen/dp16"
-            android:layout_marginEnd="@dimen/dp16"
-            android:layout_marginBottom="@dimen/dp16"
-            android:fontFamily="@font/pt_serif"
-            android:text="@string/popular"
-            android:textColor="@color/colorOrange"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_movie_genres"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_popular"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp5"
-            android:layout_marginTop="@dimen/dp16"
-            android:layout_marginEnd="@dimen/dp5"
-            android:layout_marginBottom="@dimen/dp16"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_week_movies"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp16"
-            android:layout_marginTop="@dimen/dp16"
-            android:layout_marginEnd="@dimen/dp16"
-            android:layout_marginBottom="@dimen/dp16"
-            android:fontFamily="@font/pt_serif"
-            android:text="Upcoming"
-            android:textColor="@color/colorOrange"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_popular"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_upcoming"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp5"
-            android:layout_marginTop="@dimen/dp16"
-            android:layout_marginEnd="@dimen/dp5"
-            android:layout_marginBottom="@dimen/dp16"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text"
-            app:layout_constraintVertical_bias="0.0" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
->>>>>>> origin/Task_2
 </androidx.core.widget.NestedScrollView>
