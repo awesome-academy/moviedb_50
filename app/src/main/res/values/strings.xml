@@ -1,3 +1,10 @@
 <resources>
-  <string name="app_name">moviedb_50</string>
+    <string name="app_name">Movie Time</string>
+    <string name="movie_name">I Will Find You A Better Home</string>
+    <string name="navigation_home">Home</string>
+    <string name="navigation_favorite">Favorite</string>
+    <string name="review_movie">I’ll never forget the pleading that goes on in “Sorry We Missed You.” It’s desperate but futile. Life goes on, they say. So does the global marketplace. If you order a shower curtain or diapers or a new phone, you probably need it yesterday. Ken Loach’s brutally moving agitprop drama demands a thought be spared for the anonymous souls who drop this stuff off. That shower curtain might be the death of them.</string>
+    <string name="movies">Movies</string>
+    <string name="popular">Popular</string>
+    <string name="check_internet_fail">Check internet connection!</string>
 </resources>
