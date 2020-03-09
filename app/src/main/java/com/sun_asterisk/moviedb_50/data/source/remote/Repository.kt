@@ -9,14 +9,14 @@ class Repository private constructor(
     private val localDataSource: DataSource.LocalDataSource
 ) {
     fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>?) {
-        onFetchDataJsonListener?.let{remoteDataSource.getGenres(it)}
+        onFetchDataJsonListener?.let { remoteDataSource.getGenres(it) }
     }
 
     fun getMovies(
         type: String,
         onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>?
     ) {
-        onFetchDataJsonListener?.let {remoteDataSource.getMovie(type, it)  }
+        onFetchDataJsonListener?.let { remoteDataSource.getMovie(type, it) }
     }
 
     companion object {

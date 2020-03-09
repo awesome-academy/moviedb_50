@@ -11,14 +11,13 @@ class GetJsonFromUrl(private val listener: OnFetchDataJsonListener<MutableList<G
 
     override fun onPostExecute(data: String?) {
         super.onPostExecute(data)
-        data?.let {
-            try {
-                val jsonObject = JSONObject(data)
-                listener.onSuccess(ParseJsonToGenres().parseJsonToData(jsonObject))
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+        try {
+            val jsonObject = data?.let { JSONObject(data) }
+            jsonObject?.let { listener.onSuccess(ParseJsonToGenres().parseJsonToData(it)) }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
+
     }
 
     override fun doInBackground(vararg params: String?): String? {

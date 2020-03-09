@@ -11,7 +11,7 @@ class ParseJsonToGenres {
             val jsonArray = jsonObject.getJSONArray(Genres.GenresEntry.GENRES_LIST)
             for (i in 0 until jsonArray.length()) {
                 val genresJson = jsonArray.getJSONObject(i)
-                val genres: Genres? = genresJson?.let{parseJsonToObject(it)}
+                val genres: Genres? = genresJson?.let { parseJsonToObject(it) }
                 genres?.let { genresList.add(it) }
             }
         } catch (e: JSONException) {
