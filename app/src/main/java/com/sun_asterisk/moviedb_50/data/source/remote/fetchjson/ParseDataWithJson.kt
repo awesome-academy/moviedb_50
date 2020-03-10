@@ -1,23 +1,29 @@
 package com.sun_asterisk.moviedb_50.data.source.remote.fetchjson
 
 import com.sun_asterisk.moviedb_50.utils.Constant
+import org.json.JSONException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ParseDataWithJson {
+interface ParseDataWithJson<T> {
+
+    @Throws(JSONException::class)
+    fun parseToObject(jsonData: String): T
 
     @Throws(Exception::class)
-    fun getJsonFromUrl(urlString: String?): String {
+    fun getJsonFromUrl(urlString: String?): T {
+        val responseData: T?
         val url = URL(urlString)
-        val httpURLConnection: HttpURLConnection = (url.openConnection() as HttpURLConnection).apply {
-            connectTimeout = Constant.TIME_OUT
-            readTimeout = Constant.TIME_OUT
-            requestMethod = Constant.METHOD_GET
-            doOutput = true
-            connect()
-        }
+        val httpURLConnection: HttpURLConnection =
+            (url.openConnection() as HttpURLConnection).apply {
+                connectTimeout = Constant.TIME_OUT
+                readTimeout = Constant.TIME_OUT
+                requestMethod = Constant.METHOD_GET
+                doOutput = true
+                connect()
+            }
         val bufferedReader =
             BufferedReader(InputStreamReader(url.openStream()))
         val stringBuilder = StringBuilder()
@@ -27,6 +33,7 @@ class ParseDataWithJson {
         }
         bufferedReader.close()
         httpURLConnection.disconnect()
-        return stringBuilder.toString()
+        responseData = parseToObject(stringBuilder.toString())
+        return responseData
     }
 }

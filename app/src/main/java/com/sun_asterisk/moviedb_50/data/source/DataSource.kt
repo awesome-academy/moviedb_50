@@ -1,7 +1,7 @@
 package com.sun_asterisk.moviedb_50.data.source
 
-import com.sun_asterisk.moviedb_50.data.model.Genres
-import com.sun_asterisk.moviedb_50.data.model.Movie
+import com.sun_asterisk.moviedb_50.data.model.GenresResponse
+import com.sun_asterisk.moviedb_50.data.model.MoviesResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 
 interface DataSource {
@@ -14,7 +14,13 @@ interface DataSource {
      * Remote
      */
     interface RemoteDataSource {
-        fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>)
-        fun getMovie(type: String, onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>)
+
+        fun getGenres(listener: OnFetchDataJsonListener<GenresResponse>)
+
+        fun getMovie(
+            type: String,
+            page: Int,
+            listener: OnFetchDataJsonListener<MoviesResponse>
+        )
     }
 }

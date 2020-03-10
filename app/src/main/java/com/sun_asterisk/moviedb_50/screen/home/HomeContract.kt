@@ -9,8 +9,8 @@ interface HomeContract {
      * View
      */
     interface View {
-        fun onGetGenresSuccess(genres: MutableList<Genres>?)
-        fun onGetMovieSuccess(movies: MutableList<Movie>?)
+        fun onGetGenresSuccess(genres: List<Genres>?)
+        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>?)
         fun onError(exception: Exception?)
     }
 
@@ -19,6 +19,6 @@ interface HomeContract {
      */
     interface Presenter : BasePresenter<View?> {
         fun getGenres()
-        fun getMovie(type: String)
+        fun getMovie(type: String, page: Int)
     }
 }

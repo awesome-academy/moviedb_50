@@ -6,4 +6,6 @@
     <dimen name="dp_5">5dp</dimen>
     <dimen name="dp_8">8dp</dimen>
     <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_22">22sp</dimen>
+    <dimen name="dp_80">80dp</dimen>
 </resources>

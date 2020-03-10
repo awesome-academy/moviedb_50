@@ -1,22 +1,23 @@
 package com.sun_asterisk.moviedb_50.data.source.remote
 
-import com.sun_asterisk.moviedb_50.data.model.Genres
-import com.sun_asterisk.moviedb_50.data.model.Movie
+import com.sun_asterisk.moviedb_50.data.model.GenresResponse
+import com.sun_asterisk.moviedb_50.data.model.MoviesResponse
 import com.sun_asterisk.moviedb_50.data.source.DataSource
 
 class Repository private constructor(
     private val remoteDataSource: DataSource.RemoteDataSource,
     private val localDataSource: DataSource.LocalDataSource
 ) {
-    fun getGenres(onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Genres>>?) {
-        onFetchDataJsonListener?.let { remoteDataSource.getGenres(it) }
+    fun getGenres(listener: OnFetchDataJsonListener<GenresResponse>) {
+        remoteDataSource.getGenres(listener)
     }
 
     fun getMovies(
         type: String,
-        onFetchDataJsonListener: OnFetchDataJsonListener<MutableList<Movie>>?
+        page: Int,
+        listener: OnFetchDataJsonListener<MoviesResponse>
     ) {
-        onFetchDataJsonListener?.let { remoteDataSource.getMovie(type, it) }
+        remoteDataSource.getMovie(type, page, listener)
     }
 
     companion object {
