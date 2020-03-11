@@ -3,7 +3,7 @@ package com.sun_asterisk.moviedb_50.screen
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sun_asterisk.moviedb_50.R
-import com.sun_asterisk.moviedb_50.screen.home.ContainerFragment
+import com.sun_asterisk.moviedb_50.screen.navigation.ContainerFragment
 
 class MainActivity : AppCompatActivity() {
 
