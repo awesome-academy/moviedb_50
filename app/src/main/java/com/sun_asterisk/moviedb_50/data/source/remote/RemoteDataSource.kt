@@ -16,7 +16,7 @@ class RemoteDataSource : DataSource.RemoteDataSource {
                     Constant.BASE_GENRES_LIST +
                     Constant.BASE_API_KEY +
                     Constant.BASE_LANGUAGE
-        GetDataFromUrlAsync(GenresResponseHandler(),listener).execute(url)
+        GetDataFromUrlAsync(GenresResponseHandler(), listener).execute(url)
     }
 
     override fun getMovie(
@@ -29,7 +29,7 @@ class RemoteDataSource : DataSource.RemoteDataSource {
                 Constant.BASE_LANGUAGE +
                 Constant.BASE_PAGE +
                 page
-        GetDataFromUrlAsync(MoviesResponseHandler(),listener).execute(url)
+        GetDataFromUrlAsync(MoviesResponseHandler(), listener).execute(url)
     }
 
     companion object {

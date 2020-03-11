@@ -1,16 +1,17 @@
 package com.sun_asterisk.moviedb_50.screen.home
 
+import com.sun_asterisk.moviedb_50.base.BasePresenter
 import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
-import com.sun_asterisk.moviedb_50.utils.BasePresenter
 
 interface HomeContract {
     /**
      * View
      */
     interface View {
-        fun onGetGenresSuccess(genres: List<Genres>?)
-        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>?)
+        fun onGetGenresSuccess(genres: List<Genres>)
+        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>)
+        fun onGetMoviesUpcomingSuccess(movies: List<Movie>)
         fun onError(exception: Exception?)
     }
 

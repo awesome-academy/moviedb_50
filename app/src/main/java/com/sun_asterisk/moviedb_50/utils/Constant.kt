@@ -15,7 +15,7 @@ object Constant {
     const val BASE_LANGUAGE = "&language=en-US"
     const val BASE_API_KEY = "?api_key=" + BuildConfig.API_KEY
     const val BASE_PAGE = "?page="
-    const val BASE_DEFAULT=1
+    const val BASE_PAGE_DEFAULT = 1
     const val DELAY_SLIDE = 4000L
     const val TIME_OUT = 15000
     const val METHOD_GET = "GET"
