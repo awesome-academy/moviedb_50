@@ -15,6 +15,7 @@ class HomePresenter(private val repository: Repository) : HomeContract.Presenter
         getGenres()
         getMovie(Constant.BASE_NOW_PLAYING, Constant.BASE_PAGE_DEFAULT)
         getMovie(Constant.BASE_UPCOMING, Constant.BASE_PAGE_DEFAULT)
+        getMovie(Constant.BASE_POPULAR, Constant.BASE_PAGE_DEFAULT)
     }
 
     override fun onStop() {}
@@ -52,6 +53,8 @@ class HomePresenter(private val repository: Repository) : HomeContract.Presenter
                         view?.onGetMoviesNowPlayingSuccess(data.list.map { Movie(it) })
                     Constant.BASE_UPCOMING ->
                         view?.onGetMoviesUpcomingSuccess(data.list.map { Movie(it) })
+                    Constant.BASE_POPULAR ->
+                        view?.onGetMoviesPopularSuccess(data.list.map { Movie(it) })
                 }
             }
         })

@@ -23,6 +23,7 @@ class HomeFragment : Fragment(),
     HomeContract.View, OnClickListener<Movie> {
     private var presenter: HomeContract.Presenter? = null
     private var upcomingAdapter = MovieAdapter()
+    private var popularAdapter = MovieAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +56,10 @@ class HomeFragment : Fragment(),
 
     override fun onGetMoviesUpcomingSuccess(movies: List<Movie>) {
         upcomingAdapter.updateData(movies)
+    }
+
+    override fun onGetMoviesPopularSuccess(movies: List<Movie>) {
+        popularAdapter.updateData(movies)
     }
 
     override fun onError(exception: Exception?) {
@@ -106,13 +111,17 @@ class HomeFragment : Fragment(),
     }
 
     private fun initView() {
-        upcomingAdapter = MovieAdapter()
         view?.run {
+            popularRecyclerView.setHasFixedSize(true)
+            popularRecyclerView.adapter = popularAdapter.apply {
+                onItemClick = { item, position ->
+                    toast("Popular($position) : ${item.movieTitle}")
+                }
+            }
             upcomingRecyclerView.setHasFixedSize(true)
-            upcomingRecyclerView.adapter = upcomingAdapter
             upcomingRecyclerView.adapter = upcomingAdapter.apply {
                 onItemClick = { item, position ->
-                    toast("Photo($position) : ${item.movieTitle}")
+                    toast("Upcoming($position) : ${item.movieTitle}")
                 }
             }
         }
