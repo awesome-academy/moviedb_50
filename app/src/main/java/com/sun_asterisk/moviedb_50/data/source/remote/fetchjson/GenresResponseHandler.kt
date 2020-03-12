@@ -1,6 +1,6 @@
 package com.sun_asterisk.moviedb_50.data.source.remote.fetchjson
 
-import com.sun_asterisk.moviedb_50.data.model.GenresResponse
+import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
 import org.json.JSONObject
 
 class GenresResponseHandler : ParseDataWithJson<GenresResponse> {

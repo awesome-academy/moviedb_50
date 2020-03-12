@@ -1,4 +1,4 @@
-package com.sun_asterisk.moviedb_50.data.model
+package com.sun_asterisk.moviedb_50.data.source.remote.response
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,7 +29,6 @@ data class GenresResponse(var list: List<Data>) {
 
     object GenresEntry {
         const val GENRES_LIST = "genres"
-        const val GENRES = "genre_ids"
         const val GENRES_ID = "id"
         const val GENRES_NAME = "name"
     }

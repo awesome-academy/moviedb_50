@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
-import com.sun_asterisk.moviedb_50.data.source.local.LocalDataSource
-import com.sun_asterisk.moviedb_50.data.source.remote.RemoteDataSource
-import com.sun_asterisk.moviedb_50.data.source.remote.Repository
+import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
+import com.sun_asterisk.moviedb_50.data.source.local.MovieLocalDataSource
+import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
+import com.sun_asterisk.moviedb_50.screen.details.MovieDetailsFragment
+import com.sun_asterisk.moviedb_50.screen.home.adapter.MovieAdapter
+import com.sun_asterisk.moviedb_50.screen.home.adapter.SliderViewPagerAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
@@ -22,8 +26,9 @@ import java.util.*
 class HomeFragment : Fragment(),
     HomeContract.View, OnClickListener<Movie> {
     private var presenter: HomeContract.Presenter? = null
-    private var upcomingAdapter = MovieAdapter()
-    private var popularAdapter = MovieAdapter()
+    private val upcomingAdapter: MovieAdapter by lazy { MovieAdapter() }
+    private val popularAdapter: MovieAdapter by lazy { MovieAdapter() }
+    private val movieByIDAdapter: MovieAdapter by lazy { MovieAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,9 +36,12 @@ class HomeFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-            val repository: Repository =
-                Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource)
-            presenter = HomePresenter(repository)
+            val movieRepository: MovieRepository =
+                MovieRepository.getInstance(
+                    MovieRemoteDataSource.getInstance(),
+                    MovieLocalDataSource
+                )
+            presenter = HomePresenter(movieRepository)
         } else {
             Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
                 .show()
@@ -62,6 +70,10 @@ class HomeFragment : Fragment(),
         popularAdapter.updateData(movies)
     }
 
+    override fun onGetMoviesByGenresIDSuccess(movies: List<Movie>) {
+        movieByIDAdapter.updateData(movies)
+    }
+
     override fun onError(exception: Exception?) {
         Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_SHORT).show()
     }
@@ -69,6 +81,11 @@ class HomeFragment : Fragment(),
     override fun click(item: Movie?) {}
 
     private fun initTabGenres(genres: List<Genres>) {
+        presenter?.getMovie(
+            Constant.BASE_MOVIE_BY_ID,
+            Constant.BASE_PAGE_DEFAULT,
+            genres[0].genresID
+        )
         activity?.let {
             view?.movieByKeyTabLayout?.setTabTextColors(
                 ContextCompat.getColor(it, R.color.colorTextLightBlue),
@@ -82,6 +99,25 @@ class HomeFragment : Fragment(),
                 )
             }
         }
+        view?.movieByKeyTabLayout?.addOnTabSelectedListener(
+            object : TabLayout.OnTabSelectedListener {
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    // TODO: Handle <some thing>
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        presenter?.getMovie(
+                            Constant.BASE_MOVIE_BY_ID,
+                            Constant.BASE_PAGE_DEFAULT,
+                            genres[it.position].genresID
+                        )
+                    }
+                }
+            })
     }
 
     private fun initSlideViewPaper(movies: List<Movie>) {
@@ -114,22 +150,30 @@ class HomeFragment : Fragment(),
         view?.run {
             popularRecyclerView.setHasFixedSize(true)
             popularRecyclerView.adapter = popularAdapter.apply {
-                onItemClick = { item, position ->
-                    toast("Popular($position) : ${item.movieTitle}")
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
+
                 }
             }
             upcomingRecyclerView.setHasFixedSize(true)
             upcomingRecyclerView.adapter = upcomingAdapter.apply {
-                onItemClick = { item, position ->
-                    toast("Upcoming($position) : ${item.movieTitle}")
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
+                }
+            }
+            movieByGenresRecyclerView.setHasFixedSize(true)
+            movieByGenresRecyclerView.adapter = movieByIDAdapter.apply {
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
                 }
             }
         }
         presenter?.setView(this)
         presenter?.onStart()
     }
-
-    private fun toast(msg: String) {
-        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
+    private fun addFragment(id:Int){
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(id))?.addToBackStack(null)
+            ?.commit()
     }
 }

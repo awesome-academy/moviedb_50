@@ -1,5 +1,7 @@
 package com.sun_asterisk.moviedb_50.data.model
 
+import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
+
 data class Movie(
     val movieID: Int,
     val movieTitle: String,

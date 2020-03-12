@@ -24,6 +24,5 @@ class GetDataFromUrlAsync<T>(
             listener.onError(e)
             null
         }
-
     }
 }
