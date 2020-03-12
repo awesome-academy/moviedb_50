@@ -1,4 +1,4 @@
-package com.sun_asterisk.moviedb_50.screen.home
+package com.sun_asterisk.moviedb_50.screen.home.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,8 +9,8 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Movie
-import com.sun_asterisk.moviedb_50.data.source.remote.GetImageAsyncTask
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.GetImageAsyncTask
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
 import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import kotlinx.android.synthetic.main.item_slide.view.*
@@ -39,16 +39,17 @@ class SliderViewPagerAdapter(
         img: ImageView,
         movie: Movie?
     ) {
-        GetImageAsyncTask(object : OnFetchImageListener {
+        GetImageAsyncTask(
+            object : OnFetchImageListener {
 
-            override fun onImageError(e: Exception?) {
-                e?.printStackTrace()
-            }
+                override fun onImageError(e: Exception?) {
+                    e?.printStackTrace()
+                }
 
-            override fun onImageLoaded(bitmap: Bitmap?) {
-                bitmap?.let { img.setImageBitmap(bitmap) }
-            }
-        }).execute(Constant.BASE_URL_IMAGE + movie?.movieBackdropPath)
+                override fun onImageLoaded(bitmap: Bitmap?) {
+                    bitmap?.let { img.setImageBitmap(bitmap) }
+                }
+            }).execute(Constant.BASE_URL_IMAGE + movie?.movieBackdropPath)
     }
 
     override fun getCount(): Int = list.size

@@ -1,4 +1,4 @@
-package com.sun_asterisk.moviedb_50.base
+package com.sun_asterisk.moviedb_50.screen.base
 
 interface BasePresenter<T> {
     fun onStart()
