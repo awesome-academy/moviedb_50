@@ -2,7 +2,6 @@ package com.sun_asterisk.moviedb_50.data.model
 
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 data class GenresResponse(var list: List<Data>) {
     constructor(jsonObject: JSONObject) : this(

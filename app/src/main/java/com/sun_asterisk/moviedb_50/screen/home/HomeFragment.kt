@@ -15,13 +15,14 @@ import com.sun_asterisk.moviedb_50.data.source.remote.RemoteDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.Repository
 import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
+import com.sun_asterisk.moviedb_50.utils.OnClickListener
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
 class HomeFragment : Fragment(),
-    HomeContract.View {
+    HomeContract.View, OnClickListener<Movie> {
     private var presenter: HomeContract.Presenter? = null
-    private lateinit var viewOfLayout: View
+    private var upcomingAdapter = MovieAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,62 +42,85 @@ class HomeFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewOfLayout = view
         initView()
     }
 
-    override fun onGetGenresSuccess(genres: List<Genres>?) {
-        genres?.let { initTabGenres(it) }
+    override fun onGetGenresSuccess(genres: List<Genres>) {
+        initTabGenres(genres)
     }
 
-    override fun onGetMoviesNowPlayingSuccess(movies: List<Movie>?) {
-        movies?.let { initSlideViewPaper(it) }
+    override fun onGetMoviesNowPlayingSuccess(movies: List<Movie>) {
+        initSlideViewPaper(movies)
+    }
+
+    override fun onGetMoviesUpcomingSuccess(movies: List<Movie>) {
+        upcomingAdapter.updateData(movies)
     }
 
     override fun onError(exception: Exception?) {
-        Toast.makeText(activity,exception.toString(),Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_SHORT).show()
     }
 
-    private fun initView() {
-        presenter?.setView(this)
-        presenter?.onStart()
-    }
+    override fun click(item: Movie?) {}
 
     private fun initTabGenres(genres: List<Genres>) {
         activity?.let {
-            viewOfLayout.movieByKeyTabLayout.setTabTextColors(
+            view?.movieByKeyTabLayout?.setTabTextColors(
                 ContextCompat.getColor(it, R.color.colorTextLightBlue),
                 ContextCompat.getColor(it, R.color.colorOrange)
             )
         }
         for (element in genres) {
-            viewOfLayout.movieByKeyTabLayout.addTab(
-                viewOfLayout.movieByKeyTabLayout.newTab().setText(element.genresName)
-            )
+            view?.let {
+                it.movieByKeyTabLayout.addTab(
+                    it.movieByKeyTabLayout.newTab().setText(element.genresName)
+                )
+            }
         }
     }
 
     private fun initSlideViewPaper(movies: List<Movie>) {
-        activity?.let {
-            val adapter = SliderViewPagerAdapter(it, movies)
-            viewOfLayout.sliderViewPager.adapter = adapter
-        }
-        val timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
+        val adapter = SliderViewPagerAdapter(movies)
+        view?.sliderViewPager?.adapter = adapter
+        adapter.setSlideItemClickListener(this)
+        Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 activity?.runOnUiThread {
-                    if (viewOfLayout.sliderViewPager.currentItem < movies.size - 1) {
-                        viewOfLayout.sliderViewPager.currentItem =
-                            viewOfLayout.sliderViewPager.currentItem + 1
-                    } else {
-                        viewOfLayout.sliderViewPager.currentItem = 0
+                    view?.run {
+                        if (sliderViewPager.currentItem < movies.size - 1) {
+                            sliderViewPager.currentItem =
+                                sliderViewPager.currentItem + 1
+                        } else {
+                            sliderViewPager.currentItem = 0
+                        }
                     }
                 }
             }
         }, Constant.DELAY_SLIDE, Constant.DELAY_SLIDE)
-        viewOfLayout.indicatorTabLayout.setupWithViewPager(
-            viewOfLayout.sliderViewPager,
-            true
-        )
+        view?.run {
+            indicatorTabLayout.setupWithViewPager(
+                sliderViewPager,
+                true
+            )
+        }
+    }
+
+    private fun initView() {
+        upcomingAdapter = MovieAdapter()
+        view?.run {
+            upcomingRecyclerView.setHasFixedSize(true)
+            upcomingRecyclerView.adapter = upcomingAdapter
+            upcomingRecyclerView.adapter = upcomingAdapter.apply {
+                onItemClick = { item, position ->
+                    toast("Photo($position) : ${item.movieTitle}")
+                }
+            }
+        }
+        presenter?.setView(this)
+        presenter?.onStart()
+    }
+
+    private fun toast(msg: String) {
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 }

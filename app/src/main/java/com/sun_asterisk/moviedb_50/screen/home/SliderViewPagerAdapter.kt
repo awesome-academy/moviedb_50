@@ -16,17 +16,16 @@ import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import kotlinx.android.synthetic.main.item_slide.view.*
 
 class SliderViewPagerAdapter(
-    private val context: Context,
     private val list: List<Movie>
 ) : PagerAdapter() {
-    private lateinit var slideItemClickListener: OnClickListener<Movie>
+    private var slideItemClickListener: OnClickListener<Movie>? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val inflater =
             container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val slideLayout = inflater.inflate(R.layout.item_slide, null)
         slideLayout.youtubeImageView.setOnClickListener {
-            slideItemClickListener.click(
+            slideItemClickListener?.click(
                 list[position]
             )
         }
@@ -62,5 +61,11 @@ class SliderViewPagerAdapter(
         obj: Any
     ) {
         container.removeView(obj as View)
+    }
+
+    fun setSlideItemClickListener(
+        movieItemClickListener: OnClickListener<Movie>?
+    ) {
+        this.slideItemClickListener = movieItemClickListener
     }
 }
