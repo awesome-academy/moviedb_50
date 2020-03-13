@@ -4,6 +4,7 @@ import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
+import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 
 class MovieRepository private constructor(
@@ -21,6 +22,13 @@ class MovieRepository private constructor(
         listener: OnFetchDataJsonListener<MoviesResponse>
     ) {
         remoteMovieDataSource.getMovie(type, page, genresID, listener)
+    }
+
+    fun getMovieDetails(
+        movieID: Int,
+        listener: OnFetchDataJsonListener<MovieDetailsResponse>?
+    ) {
+        listener?.let { remoteMovieDataSource.getMovieDetails(movieID, it) }
     }
 
     companion object {

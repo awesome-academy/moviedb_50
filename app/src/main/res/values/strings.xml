@@ -8,4 +8,8 @@
     <string name="check_internet_fail">Check internet connection!</string>
     <string name="upcoming">Upcoming</string>
     <string name="IMDb">0.0</string>
+    <string name="title_yes">Yes</string>
+    <string name="title_no">No</string>
+    <string name="title_exit_app">Exit the application</string>
+    <string name="notification_exit_app">Are you sure want to exit?</string>
 </resources>

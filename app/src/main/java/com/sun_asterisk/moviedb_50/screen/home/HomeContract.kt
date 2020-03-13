@@ -16,6 +16,7 @@ interface HomeContract {
         fun onGetMoviesPopularSuccess(movies: List<Movie>)
         fun onGetMoviesByGenresIDSuccess(movies: List<Movie>)
         fun onError(exception: Exception?)
+        fun onLoading(isLoad: Boolean)
     }
 
     /**
