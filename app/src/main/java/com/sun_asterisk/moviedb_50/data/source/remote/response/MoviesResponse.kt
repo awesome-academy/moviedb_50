@@ -1,11 +1,9 @@
-package com.sun_asterisk.moviedb_50.data.model
+package com.sun_asterisk.moviedb_50.data.source.remote.response
 
 import org.json.JSONException
 import org.json.JSONObject
 
-data class MoviesResponse(
-    var list: List<Data>
-) {
+data class MoviesResponse(var list: List<Data>) {
     constructor(jsonObject: JSONObject) : this(
         list = mutableListOf<Data>().apply {
             try {

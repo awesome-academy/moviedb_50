@@ -1,14 +1,14 @@
 package com.sun_asterisk.moviedb_50.data.source.remote
 
-import com.sun_asterisk.moviedb_50.data.model.GenresResponse
-import com.sun_asterisk.moviedb_50.data.model.MoviesResponse
-import com.sun_asterisk.moviedb_50.data.source.DataSource
+import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GenresResponseHandler
 import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GetDataFromUrlAsync
 import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.MoviesResponseHandler
+import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
+import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
 
-class RemoteDataSource : DataSource.RemoteDataSource {
+class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
 
     override fun getGenres(listener: OnFetchDataJsonListener<GenresResponse>) {
         val url =
@@ -21,19 +21,25 @@ class RemoteDataSource : DataSource.RemoteDataSource {
 
     override fun getMovie(
         type: String, page: Int,
+        genresID: Int,
         listener: OnFetchDataJsonListener<MoviesResponse>
     ) {
+
         val url = Constant.BASE_URL +
                 type +
                 Constant.BASE_API_KEY +
                 Constant.BASE_LANGUAGE +
                 Constant.BASE_PAGE +
-                page
+                page +
+                if (type == Constant.BASE_MOVIE_BY_ID)
+                    Constant.BASE_GENRES_ID + genresID
+                else ""
         GetDataFromUrlAsync(MoviesResponseHandler(), listener).execute(url)
     }
 
     companion object {
-        private var instance: RemoteDataSource? = null
-        fun getInstance() = instance ?: RemoteDataSource().also { instance = it }
+        private var instance: MovieRemoteDataSource? = null
+        fun getInstance() =
+            instance ?: MovieRemoteDataSource().also { instance = it }
     }
 }

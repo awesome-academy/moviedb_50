@@ -1,10 +1,10 @@
 package com.sun_asterisk.moviedb_50.data.source
 
-import com.sun_asterisk.moviedb_50.data.model.GenresResponse
-import com.sun_asterisk.moviedb_50.data.model.MoviesResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
+import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
+import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 
-interface DataSource {
+interface MovieDataSource {
     /**
      * Local
      */
@@ -20,6 +20,7 @@ interface DataSource {
         fun getMovie(
             type: String,
             page: Int,
+            genresID: Int,
             listener: OnFetchDataJsonListener<MoviesResponse>
         )
     }

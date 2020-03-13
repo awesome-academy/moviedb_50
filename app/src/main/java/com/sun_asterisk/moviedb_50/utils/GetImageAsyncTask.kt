@@ -1,9 +1,8 @@
-package com.sun_asterisk.moviedb_50.data.source.remote
+package com.sun_asterisk.moviedb_50.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
-import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL

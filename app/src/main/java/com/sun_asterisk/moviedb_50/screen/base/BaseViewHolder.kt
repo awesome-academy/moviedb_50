@@ -1,4 +1,4 @@
-package com.sun_asterisk.moviedb_50.base
+package com.sun_asterisk.moviedb_50.screen.base
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

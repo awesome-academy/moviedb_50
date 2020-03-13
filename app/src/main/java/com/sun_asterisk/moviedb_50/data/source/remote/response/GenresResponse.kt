@@ -1,4 +1,4 @@
-package com.sun_asterisk.moviedb_50.data.model
+package com.sun_asterisk.moviedb_50.data.source.remote.response
 
 import org.json.JSONException
 import org.json.JSONObject
