@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Genres
@@ -31,7 +32,7 @@ class HomeFragment : Fragment(),
     private val popularAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val movieByIDAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val movieSlideAdapter: SliderViewPagerAdapter by lazy { SliderViewPagerAdapter() }
-    private var genresSelected: Int = 0
+    private var genresSelected = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +90,7 @@ class HomeFragment : Fragment(),
     }
 
     override fun click(item: Movie?) {
-        item?.let { addFragment(it.movieID) }
+        item?.let { addFragment(it) }
     }
 
     private fun initComponents() {
@@ -114,9 +115,8 @@ class HomeFragment : Fragment(),
                 }
                 genresSelected = genres[0].genresID
                 presenter.getMovie(
-                    Constant.BASE_MOVIE_BY_ID,
-                    Constant.BASE_PAGE_DEFAULT,
-                    genresSelected
+                    Constant.BASE_GENRES_ID,
+                    genresSelected.toString()
                 )
                 movieByKeyTabLayout?.addOnTabSelectedListener(
                     object : TabLayout.OnTabSelectedListener {
@@ -130,9 +130,8 @@ class HomeFragment : Fragment(),
                             if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
                                 tab?.let { genresSelected = genres[it.position].genresID }
                                 presenter.getMovie(
-                                    Constant.BASE_MOVIE_BY_ID,
-                                    Constant.BASE_PAGE_DEFAULT,
-                                    genresSelected
+                                    Constant.BASE_GENRES_ID,
+                                    genresSelected.toString()
                                 )
                             } else {
                                 onLoading(true)
@@ -155,19 +154,19 @@ class HomeFragment : Fragment(),
             popularRecyclerView.setHasFixedSize(true)
             popularRecyclerView.adapter = popularAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             upcomingRecyclerView.setHasFixedSize(true)
             upcomingRecyclerView.adapter = upcomingAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             movieByGenresRecyclerView.setHasFixedSize(true)
             movieByGenresRecyclerView.adapter = movieByIDAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             sliderViewPager?.adapter = movieSlideAdapter
@@ -212,9 +211,8 @@ class HomeFragment : Fragment(),
             if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
                 presenter.onStart()
                 presenter.getMovie(
-                    Constant.BASE_MOVIE_BY_ID,
-                    Constant.BASE_PAGE_DEFAULT,
-                    genresSelected
+                    Constant.BASE_GENRES_ID,
+                    genresSelected.toString()
                 )
             } else {
                 onLoading(true)
@@ -227,11 +225,12 @@ class HomeFragment : Fragment(),
         }
     }
 
-    private fun addFragment(id: Int) {
+    private fun addFragment(movie: Movie) {
         activity?.let {
             if (NetworkUtil.isConnectedToNetwork(it)) {
                 it.supportFragmentManager.beginTransaction()
-                    .add(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(id))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .add(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(movie.movieID,movie.movieTitle))
                     .addToBackStack(null)
                     .commit()
             } else {

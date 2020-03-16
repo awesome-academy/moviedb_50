@@ -21,21 +21,35 @@ class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
         GetDataFromUrlAsync(GenresResponseHandler(), listener).execute(url)
     }
 
-    override fun getMovie(
-        type: String, page: Int,
-        genresID: Int,
+    override fun getMovies(
+        type: String,
+        query: String,
+        page: Int,
         listener: OnFetchDataJsonListener<MoviesResponse>
     ) {
 
         val url = Constant.BASE_URL +
-                type +
+                when (type) {
+                    Constant.BASE_GENRES_ID -> Constant.BASE_DISCOVER_MOVIE
+                    Constant.BASE_CAST_ID -> Constant.BASE_DISCOVER_MOVIE
+                    Constant.BASE_PRODUCE_ID -> Constant.BASE_DISCOVER_MOVIE
+                    else -> type
+                } +
                 Constant.BASE_API_KEY +
                 Constant.BASE_LANGUAGE +
-                Constant.BASE_PAGE +
-                page +
-                if (type == Constant.BASE_MOVIE_BY_ID)
-                    Constant.BASE_GENRES_ID + genresID
-                else ""
+                if (page > 0) {
+                    Constant.BASE_PAGE +
+                            page
+                } else {
+                    ""
+                } +
+                when (type) {
+                    Constant.BASE_GENRES_ID -> type + query
+                    Constant.BASE_CAST_ID -> type + query
+                    Constant.BASE_PRODUCE_ID -> type + query
+                    Constant.BASE_SEARCH -> Constant.BASE_QUERY + query
+                    else -> ""
+                }
         GetDataFromUrlAsync(MoviesResponseHandler(), listener).execute(url)
     }
 

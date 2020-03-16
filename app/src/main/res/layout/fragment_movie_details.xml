@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_base" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/detailsSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/include">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/backdropImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_275"
+                    android:background="@color/colorSliver"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_80"
+                    android:src="@drawable/gradient_bg"
+                    app:layout_constraintBottom_toBottomOf="@+id/backdropImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/backdropImageView"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:outlineAmbientShadowColor="@android:color/white"
+                    android:outlineSpotShadowColor="@android:color/white"
+                    app:cardCornerRadius="@dimen/dp_5"
+                    app:layout_constraintBottom_toBottomOf="@+id/backdropImageView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/backdropImageView">
+
+                    <ImageView
+                        android:id="@+id/posterImageView"
+                        android:layout_width="@dimen/dp_125"
+                        android:layout_height="@dimen/dp_175"
+                        android:background="@drawable/placeholder"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginBottom="@dimen/dp_5"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:text="@string/movie_name"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_18"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cardView"
+                    app:layout_constraintTop_toTopOf="@+id/backdropImageView" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/genresChipGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    app:chipSpacing="@dimen/dp_8"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cardView"
+                    app:layout_constraintTop_toBottomOf="@+id/backdropImageView"
+                    app:singleSelection="true" />
+
+                <View
+                    android:id="@+id/dividerView"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@color/colorSliver"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+                <TextView
+                    android:id="@+id/releaseDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:text="@string/release_date"
+                    android:textColor="@color/colorTextLightBlue"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/favoriteLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/releaseDateTexView" />
+
+                <TextView
+                    android:id="@+id/releaseDateTexView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:drawableStart="@drawable/ic_av_timer"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:gravity="center"
+                    android:text="@string/date_text"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/releaseDateLabel"
+                    app:layout_constraintStart_toStartOf="@+id/releaseDateLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerView" />
+
+                <TextView
+                    android:id="@+id/voteLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/vote"
+                    android:textColor="@color/colorTextLightBlue"
+                    app:layout_constraintEnd_toStartOf="@+id/favoriteLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/voteTextView" />
+
+                <TextView
+                    android:id="@+id/voteTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:drawableEnd="@drawable/ic_star"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:gravity="center"
+                    android:text="@string/vote_text"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/voteLabel"
+                    app:layout_constraintStart_toStartOf="@+id/voteLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerView" />
+
+                <TextView
+                    android:id="@+id/favoriteLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/favorite"
+                    android:textColor="@color/colorTextLightBlue"
+                    app:layout_constraintEnd_toEndOf="@+id/favoriteImageView"
+                    app:layout_constraintStart_toStartOf="@+id/favoriteImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/favoriteImageView" />
+
+                <ImageView
+                    android:id="@+id/favoriteImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@drawable/ic_favorite_border"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerView" />
+
+                <View
+                    android:id="@+id/dividerBottomView"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@color/colorSliver"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/voteLabel" />
+
+                <TextView
+                    android:id="@+id/overViewTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:lineSpacingExtra="@dimen/dp_8"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerBottomView" />
+
+                <TextView
+                    android:id="@+id/titleCastTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@color/colorDarkBlue"
+                    android:padding="@dimen/dp_8"
+                    android:text="@string/casts"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overViewTextView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/castsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleCastTextView" />
+
+                <TextView
+                    android:id="@+id/titleProduceTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@color/colorDarkBlue"
+                    android:padding="@dimen/dp_8"
+                    android:text="@string/produces"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/castsRecyclerView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/producesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleProduceTextView" />
+
+                <TextView
+                    android:id="@+id/titleTrailerTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@color/colorDarkBlue"
+                    android:padding="@dimen/dp_8"
+                    android:text="@string/trailer"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/producesRecyclerView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/moviesTrailerRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleTrailerTextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detailsProgressBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDarkBlue"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/detailsProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorOrange"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
