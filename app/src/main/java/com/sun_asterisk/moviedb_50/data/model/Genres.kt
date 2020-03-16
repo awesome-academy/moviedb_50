@@ -1,13 +1,19 @@
 package com.sun_asterisk.moviedb_50.data.model
 
-import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
+import org.json.JSONObject
 
 data class Genres(
     val genresID: Int,
     val genresName: String
 ) {
-    constructor(response: GenresResponse.Data) : this(
-        genresID = response.genresID,
-        genresName = response.genresName
+    constructor(genresJson: JSONObject) : this(
+        genresID = genresJson.optInt(GenresEntry.GENRES_ID),
+        genresName = genresJson.optString(GenresEntry.GENRES_NAME)
     )
+
+    object GenresEntry {
+        const val GENRES = "genres"
+        const val GENRES_ID = "id"
+        const val GENRES_NAME = "name"
+    }
 }

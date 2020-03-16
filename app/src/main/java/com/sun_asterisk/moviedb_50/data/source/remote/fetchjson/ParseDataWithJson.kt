@@ -18,9 +18,9 @@ interface ParseDataWithJson<T> {
         val url = URL(urlString)
         val httpURLConnection: HttpURLConnection =
             (url.openConnection() as HttpURLConnection).apply {
-                connectTimeout = Constant.TIME_OUT
-                readTimeout = Constant.TIME_OUT
-                requestMethod = Constant.METHOD_GET
+                connectTimeout = Constant.BASE_TIME_OUT
+                readTimeout = Constant.BASE_TIME_OUT
+                requestMethod = Constant.BASE_METHOD_GET
                 doOutput = true
                 connect()
             }

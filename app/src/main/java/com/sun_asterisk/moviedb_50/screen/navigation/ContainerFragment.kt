@@ -22,31 +22,33 @@ class ContainerFragment : Fragment() {
     }
 
     private fun loadFragment(fragment: Fragment, position: Int): Boolean {
-        when {
-            startingPosition > position -> {
-                activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
-                        R.anim.left_to_right,
-                        R.anim.exit_left_to_right,
-                        R.anim.right_to_left,
-                        R.anim.exit_right_to_left
-                    )?.replace(R.id.containerFrameLayout, fragment)
-                    ?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    ?.commit()
-            }
-            startingPosition < position -> {
-                activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
-                        R.anim.right_to_left,
-                        R.anim.exit_right_to_left,
-                        R.anim.left_to_right,
-                        R.anim.exit_left_to_right
-                    )?.replace(R.id.containerFrameLayout, fragment)
-                    ?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    ?.commit()
-            }
-            else -> {
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.containerFrameLayout, fragment)
-                    ?.commit()
+        activity?.run {
+            when {
+                startingPosition > position -> {
+                    supportFragmentManager.beginTransaction().setCustomAnimations(
+                            R.anim.left_to_right,
+                            R.anim.exit_left_to_right,
+                            R.anim.right_to_left,
+                            R.anim.exit_right_to_left
+                        ).replace(R.id.containerFrameLayout, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
+                startingPosition < position -> {
+                    supportFragmentManager.beginTransaction().setCustomAnimations(
+                            R.anim.right_to_left,
+                            R.anim.exit_right_to_left,
+                            R.anim.left_to_right,
+                            R.anim.exit_left_to_right
+                        ).replace(R.id.containerFrameLayout, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
+                else -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.containerFrameLayout, fragment)
+                        .commit()
+                }
             }
         }
         startingPosition = position

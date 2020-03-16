@@ -15,9 +15,8 @@ import com.sun_asterisk.moviedb_50.utils.OnClickListener
 import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import kotlinx.android.synthetic.main.item_slide.view.*
 
-class SliderViewPagerAdapter(
-    private val list: List<Movie>
-) : PagerAdapter() {
+class SliderViewPagerAdapter : PagerAdapter() {
+    private val list = arrayListOf<Movie>()
     private var slideItemClickListener: OnClickListener<Movie>? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -68,5 +67,13 @@ class SliderViewPagerAdapter(
         movieItemClickListener: OnClickListener<Movie>?
     ) {
         this.slideItemClickListener = movieItemClickListener
+    }
+
+    fun updateData(newItems: List<Movie>) {
+        list.apply {
+            if (isNotEmpty()) clear()
+            addAll(newItems)
+        }
+        notifyDataSetChanged()
     }
 }

@@ -14,43 +14,42 @@ import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.local.MovieLocalDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
+import com.sun_asterisk.moviedb_50.screen.details.MovieDetailsFragment
 import com.sun_asterisk.moviedb_50.screen.home.adapter.MovieAdapter
 import com.sun_asterisk.moviedb_50.screen.home.adapter.SliderViewPagerAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
 class HomeFragment : Fragment(),
     HomeContract.View, OnClickListener<Movie> {
-    private var presenter: HomeContract.Presenter? = null
+    private lateinit var presenter: HomeContract.Presenter
     private val upcomingAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val popularAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val movieByIDAdapter: MovieAdapter by lazy { MovieAdapter() }
+    private val movieSlideAdapter: SliderViewPagerAdapter by lazy { SliderViewPagerAdapter() }
+    private var genresSelected: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-            val movieRepository: MovieRepository =
-                MovieRepository.getInstance(
-                    MovieRemoteDataSource.getInstance(),
-                    MovieLocalDataSource
-                )
-            presenter = HomePresenter(movieRepository)
-        } else {
-            Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
-                .show()
-        }
+        val movieRepository: MovieRepository =
+            MovieRepository.getInstance(
+                MovieRemoteDataSource.getInstance(),
+                MovieLocalDataSource
+            )
+        presenter = HomePresenter(movieRepository)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        initComponents()
     }
 
     override fun onGetGenresSuccess(genres: List<Genres>) {
@@ -58,7 +57,7 @@ class HomeFragment : Fragment(),
     }
 
     override fun onGetMoviesNowPlayingSuccess(movies: List<Movie>) {
-        initSlideViewPaper(movies)
+        movieSlideAdapter.updateData(movies)
     }
 
     override fun onGetMoviesUpcomingSuccess(movies: List<Movie>) {
@@ -77,57 +76,112 @@ class HomeFragment : Fragment(),
         Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_SHORT).show()
     }
 
-    override fun click(item: Movie?) {}
-
-    private fun initTabGenres(genres: List<Genres>) {
-        presenter?.getMovie(
-            Constant.BASE_MOVIE_BY_ID,
-            Constant.BASE_PAGE_DEFAULT,
-            genres[0].genresID
-        )
-        activity?.let {
-            view?.movieByKeyTabLayout?.setTabTextColors(
-                ContextCompat.getColor(it, R.color.colorTextLightBlue),
-                ContextCompat.getColor(it, R.color.colorOrange)
-            )
-        }
-        for (element in genres) {
-            view?.let {
-                it.movieByKeyTabLayout.addTab(
-                    it.movieByKeyTabLayout.newTab().setText(element.genresName)
-                )
+    override fun onLoading(isLoad: Boolean) {
+        view?.run {
+            when (isLoad) {
+                false -> homeProgressBarLayout.visibility = View.VISIBLE
+                true -> {
+                    homeSwipeRefresh.isRefreshing = false
+                    homeProgressBarLayout.visibility = View.GONE
+                }
             }
         }
-        view?.movieByKeyTabLayout?.addOnTabSelectedListener(
-            object : TabLayout.OnTabSelectedListener {
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                    // TODO: Handle <some thing>
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tab?.let {
-                        presenter?.getMovie(
-                            Constant.BASE_MOVIE_BY_ID,
-                            Constant.BASE_PAGE_DEFAULT,
-                            genres[it.position].genresID
-                        )
-                    }
-                }
-            })
     }
 
-    private fun initSlideViewPaper(movies: List<Movie>) {
-        val adapter = SliderViewPagerAdapter(movies)
-        view?.sliderViewPager?.adapter = adapter
-        adapter.setSlideItemClickListener(this)
+    override fun click(item: Movie?) {
+        item?.let { addFragment(it.movieID) }
+    }
+
+    private fun initComponents() {
+        initAdapter()
+        initPresenter()
+        initRefresh()
+    }
+
+    private fun initTabGenres(genres: List<Genres>) {
+        view?.run {
+            if (movieByKeyTabLayout?.tabCount == 0) {
+                activity?.let {
+                    movieByKeyTabLayout?.setTabTextColors(
+                        ContextCompat.getColor(it, R.color.colorTextLightBlue),
+                        ContextCompat.getColor(it, R.color.colorOrange)
+                    )
+                }
+                for (element in genres) {
+                    movieByKeyTabLayout.addTab(
+                        movieByKeyTabLayout.newTab().setText(element.genresName)
+                    )
+                }
+                genresSelected = genres[0].genresID
+                presenter.getMovie(
+                    Constant.BASE_MOVIE_BY_ID,
+                    Constant.BASE_PAGE_DEFAULT,
+                    genresSelected
+                )
+                movieByKeyTabLayout?.addOnTabSelectedListener(
+                    object : TabLayout.OnTabSelectedListener {
+                        override fun onTabReselected(tab: TabLayout.Tab?) {
+                        }
+
+                        override fun onTabUnselected(tab: TabLayout.Tab?) {
+                        }
+
+                        override fun onTabSelected(tab: TabLayout.Tab?) {
+                            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
+                                tab?.let { genresSelected = genres[it.position].genresID }
+                                presenter.getMovie(
+                                    Constant.BASE_MOVIE_BY_ID,
+                                    Constant.BASE_PAGE_DEFAULT,
+                                    genresSelected
+                                )
+                            } else {
+                                onLoading(true)
+                                Toast.makeText(
+                                    activity,
+                                    getString(R.string.check_internet_fail),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        }
+                    })
+                movieByKeyTabLayout.getTabAt(0)?.select()
+            }
+        }
+    }
+
+    private fun initAdapter() {
+        view?.run {
+            popularRecyclerView.setHasFixedSize(true)
+            popularRecyclerView.adapter = popularAdapter.apply {
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
+                }
+            }
+            upcomingRecyclerView.setHasFixedSize(true)
+            upcomingRecyclerView.adapter = upcomingAdapter.apply {
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
+                }
+            }
+            movieByGenresRecyclerView.setHasFixedSize(true)
+            movieByGenresRecyclerView.adapter = movieByIDAdapter.apply {
+                onItemClick = { item, _ ->
+                    addFragment(item.movieID)
+                }
+            }
+            sliderViewPager?.adapter = movieSlideAdapter
+            indicatorTabLayout.setupWithViewPager(
+                sliderViewPager,
+                true
+            )
+        }
+        movieSlideAdapter.setSlideItemClickListener(this)
         Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 activity?.runOnUiThread {
                     view?.run {
-                        if (sliderViewPager.currentItem < movies.size - 1) {
+                        if (sliderViewPager.currentItem < movieSlideAdapter.count - 1) {
                             sliderViewPager.currentItem =
                                 sliderViewPager.currentItem + 1
                         } else {
@@ -136,34 +190,57 @@ class HomeFragment : Fragment(),
                     }
                 }
             }
-        }, Constant.DELAY_SLIDE, Constant.DELAY_SLIDE)
-        view?.run {
-            indicatorTabLayout.setupWithViewPager(
-                sliderViewPager,
-                true
-            )
+        }, Constant.BASE_DELAY_SLIDE, Constant.BASE_DELAY_SLIDE)
+    }
+
+    private fun initPresenter() {
+        presenter.setView(this)
+        if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
+            presenter.onStart()
+        } else {
+            onLoading(true)
+            Toast.makeText(
+                activity,
+                getString(R.string.check_internet_fail),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
-    private fun initView() {
-        view?.run {
-            popularRecyclerView.setHasFixedSize(true)
-            popularRecyclerView.adapter = popularAdapter.apply {
-                onItemClick = { item, position ->
-                }
-            }
-            upcomingRecyclerView.setHasFixedSize(true)
-            upcomingRecyclerView.adapter = upcomingAdapter.apply {
-                onItemClick = { item, position ->
-                }
-            }
-            movieByGenresRecyclerView.setHasFixedSize(true)
-            movieByGenresRecyclerView.adapter = movieByIDAdapter.apply {
-                onItemClick = { item, position ->
-                }
+    private fun initRefresh() {
+        homeSwipeRefresh.setOnRefreshListener {
+            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
+                presenter.onStart()
+                presenter.getMovie(
+                    Constant.BASE_MOVIE_BY_ID,
+                    Constant.BASE_PAGE_DEFAULT,
+                    genresSelected
+                )
+            } else {
+                onLoading(true)
+                Toast.makeText(
+                    activity,
+                    getString(R.string.check_internet_fail),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-        presenter?.setView(this)
-        presenter?.onStart()
+    }
+
+    private fun addFragment(id: Int) {
+        activity?.let {
+            if (NetworkUtil.isConnectedToNetwork(it)) {
+                it.supportFragmentManager.beginTransaction()
+                    .add(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(id))
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Toast.makeText(
+                    activity,
+                    getString(R.string.check_internet_fail),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 }
