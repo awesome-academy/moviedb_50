@@ -20,4 +20,5 @@
     <string name="casts">Casts</string>
     <string name="vote_text">0.0</string>
     <string name="trailer">Trailers</string>
+    <string name="results_found">Found %1$d results</string>
 </resources>

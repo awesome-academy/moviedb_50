@@ -20,7 +20,7 @@ object Constant {
     const val BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500"
     const val BASE_LANGUAGE = "&language=en-US"
     const val BASE_API_KEY = "?api_key=" + BuildConfig.API_KEY
-    const val BASE_PAGE = "?page="
+    const val BASE_PAGE = "&page="
     const val BASE_PAGE_DEFAULT = 1
     const val BASE_QUERY_DEFAULT = "1"
     const val BASE_DELAY_SLIDE = 4000L
@@ -33,6 +33,4 @@ object Constant {
     const val BASE_TITLE = "title"
     const val BASE_SEARCH = "search/movie"
     const val BASE_QUERY = "&query="
-    const val BASE_DATE_TO_STRING = "dd-MM-yy"
-    const val BASE_STRING_TO_DATE = "yyyy-MM-dd"
 }

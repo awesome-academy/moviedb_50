@@ -13,9 +13,9 @@ data class MovieDetailsResponse(
 ) {
     constructor(jsonObject: JSONObject) : this(
         movies = Movie(jsonObject),
-        genres = ParseDataToObject().parJsonToGenres(jsonObject),
-        produce = ParseDataToObject().parJsonToProduce(jsonObject),
-        casts = ParseDataToObject().parJsonToCasts(jsonObject),
-        trailers = ParseDataToObject().parJsonToTrailer(jsonObject)
+        genres = ParseDataToObject.parJsonToGenres(jsonObject),
+        produce = ParseDataToObject.parJsonToProduce(jsonObject),
+        casts = ParseDataToObject.parJsonToCasts(jsonObject),
+        trailers = ParseDataToObject.parJsonToTrailer(jsonObject)
     )
 }

@@ -3,7 +3,11 @@ package com.sun_asterisk.moviedb_50.data.source.remote.fetchjson
 import com.sun_asterisk.moviedb_50.data.model.*
 import org.json.JSONObject
 
-class ParseDataToObject {
+object ParseDataToObject {
+    fun parJsonToMovieResultPage(jsonObject: JSONObject): MovieResultPage {
+        return MovieResultPage(jsonObject)
+    }
+
     fun parJsonToMovies(jsonObject: JSONObject): MutableList<Movie> {
         val list = mutableListOf<Movie>()
         val jsonArray = jsonObject.getJSONArray(Movie.MovieEntry.MOVIE)

@@ -1,6 +1,7 @@
 package com.sun_asterisk.moviedb_50.screen.listmovie
 
 import com.sun_asterisk.moviedb_50.data.model.Movie
+import com.sun_asterisk.moviedb_50.data.model.MovieResultPage
 import com.sun_asterisk.moviedb_50.screen.base.BasePresenter
 import com.sun_asterisk.moviedb_50.utils.Constant
 
@@ -10,6 +11,7 @@ interface ListMovieContract {
      */
     interface View {
         fun onGetMoviesSuccess(movies: List<Movie>)
+        fun onGetMovieResultPage(movieResultPage: MovieResultPage)
         fun onError(exception: Exception?)
         fun onLoading(isLoad: Boolean)
     }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -23,8 +22,12 @@ import com.sun_asterisk.moviedb_50.screen.details.adapter.CastAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.ProduceAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.TrailerAdapter
 import com.sun_asterisk.moviedb_50.screen.listmovie.ListMovieFragment
-import com.sun_asterisk.moviedb_50.utils.*
+import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.GetImageAsyncTask
+import com.sun_asterisk.moviedb_50.utils.NetworkUtil
+import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
+import kotlinx.android.synthetic.main.toolbar_base.*
 
 class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
     private lateinit var presenter: MovieDetailsContract.Presenter
@@ -62,7 +65,7 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         view?.run {
             voteTextView.text = movie.movieVoteAverage.toString()
             titleTextView.text = movie.movieTitle
-            releaseDateTexView.text = DateUtils.formatDate(movie.movieReleaseDate)
+            releaseDateTexView.text = movie.movieReleaseDate
             overViewTextView.text = movie.movieOverView
             getImageAsync(movie.movieBackdropPath, backdropImageView)
             getImageAsync(movie.moviePosterPath, posterImageView)
@@ -111,11 +114,11 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
 
     override fun onLoading(isLoad: Boolean) {
         view?.run {
-            if (!isLoad) {
-                detailsProgressBarLayout.visibility = View.VISIBLE
-            } else {
+            if (isLoad) {
                 detailsSwipeRefresh.isRefreshing = false
-                detailsProgressBarLayout.visibility = View.GONE
+                frameProgressBarMovie.visibility = View.GONE
+            } else {
+                frameProgressBarMovie.visibility = View.VISIBLE
             }
         }
     }
@@ -198,16 +201,15 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
     }
 
     private fun initToolBar() {
-        view?.let {
-            val toolbar = it.findViewById<Toolbar>(R.id.toolbar)
-            (activity as MainActivity).run {
-                setSupportActionBar(toolbar)
+        toolbar_base?.let {
+            (activity as? MainActivity)?.run {
+                setSupportActionBar(it)
                 supportActionBar?.run {
                     setDisplayShowTitleEnabled(true)
                     title = arguments?.getString(Constant.BASE_TITLE)
                 }
             }
-            toolbar.setNavigationOnClickListener {
+            it.setNavigationOnClickListener {
                 activity?.run { supportFragmentManager.popBackStack() }
             }
         }
