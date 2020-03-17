@@ -21,10 +21,7 @@ import com.sun_asterisk.moviedb_50.screen.MainActivity
 import com.sun_asterisk.moviedb_50.screen.details.adapter.CastAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.ProduceAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.TrailerAdapter
-import com.sun_asterisk.moviedb_50.utils.Constant
-import com.sun_asterisk.moviedb_50.utils.GetImageAsyncTask
-import com.sun_asterisk.moviedb_50.utils.NetworkUtil
-import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
+import com.sun_asterisk.moviedb_50.utils.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 
 class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
@@ -63,11 +60,12 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         view?.run {
             voteTextView.text = movie.movieVoteAverage.toString()
             titleTextView.text = movie.movieTitle
-            releaseDateTexView.text = movie.movieReleaseDate
+            releaseDateTexView.text = DateUtils.formatDate(movie.movieReleaseDate)
             overViewTextView.text = movie.movieOverView
             getImageAsync(movie.movieBackdropPath, backdropImageView)
             getImageAsync(movie.moviePosterPath, posterImageView)
-            backdropImageView.animation = AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
+            backdropImageView.animation =
+                AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
         }
     }
 
@@ -76,17 +74,18 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         view?.run {
             if (genresChipGroup.childCount == 0) {
                 for (item in genres) {
-                    val chip = LayoutInflater.from(activity)
+                    val genresChip = LayoutInflater.from(activity)
                         .inflate(R.layout.item_chip, genresChipGroup, false) as Chip
-                    chip.run {
+                    genresChip.run {
                         id = item.genresID
                         text = item.genresName
                         setOnCheckedChangeListener { _, isChecked ->
                             if (isChecked) {
+                                //TODO something
                             }
                         }
                     }
-                    genresChipGroup.addView(chip)
+                    genresChipGroup.addView(genresChip)
                 }
             }
         }
@@ -106,29 +105,32 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
 
     override fun onLoading(isLoad: Boolean) {
         view?.run {
-            when (isLoad) {
-                false -> detailsProgressBarLayout.visibility = View.VISIBLE
-                true -> {
-                    detailsSwipeRefresh.isRefreshing = false
-                    detailsProgressBarLayout.visibility = View.GONE
-                }
+            if (!isLoad) {
+                detailsProgressBarLayout.visibility = View.VISIBLE
+            } else {
+                detailsSwipeRefresh.isRefreshing = false
+                detailsProgressBarLayout.visibility = View.GONE
             }
         }
     }
 
     override fun onError(exception: Exception?) {
-        Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_LONG)
-            .show()
+        exception?.let {
+            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun initPresenter() {
         presenter.setView(this)
-        if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-            arguments?.let { presenter.getMovieDetails(it.getInt(Constant.BASE_VALUE)) }
-        } else {
-            onLoading(true)
-            Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
-                .show()
+        activity?.let { activity ->
+            if (NetworkUtil.isConnectedToNetwork(activity)) {
+                arguments?.let { presenter.getMovieDetails(it.getInt(Constant.BASE_VALUE)) }
+            } else {
+                onLoading(true)
+                Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
+                    .show()
+            }
         }
     }
 
@@ -148,14 +150,20 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
 
     private fun initRefresh() {
         view?.detailsSwipeRefresh?.setOnRefreshListener {
-            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-                arguments?.let {
-                    presenter.getMovieDetails(it.getInt(Constant.BASE_VALUE))
+            activity?.let { activity ->
+                if (NetworkUtil.isConnectedToNetwork(activity)) {
+                    arguments?.let {
+                        presenter.getMovieDetails(it.getInt(Constant.BASE_VALUE))
+                    }
+                } else {
+                    onLoading(true)
+                    Toast.makeText(
+                            activity,
+                            getString(R.string.check_internet_fail),
+                            Toast.LENGTH_LONG
+                        )
+                        .show()
                 }
-            } else {
-                onLoading(true)
-                Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
-                    .show()
             }
         }
     }
@@ -164,17 +172,20 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         view?.run {
             castsRecyclerView.setHasFixedSize(true)
             castsRecyclerView.adapter = castAdapter.apply {
-                onItemClick = { item, _ ->
+                onItemClick = { _, _ ->
+                    //TODO something
                 }
             }
             producesRecyclerView.setHasFixedSize(true)
             producesRecyclerView.adapter = produceAdapter.apply {
-                onItemClick = { item, _ ->
+                onItemClick = { _, _ ->
+                    //TODO something
                 }
             }
             moviesTrailerRecyclerView.setHasFixedSize(true)
             moviesTrailerRecyclerView.adapter = trailerAdapter.apply {
-                onItemClick = { item, _ ->
+                onItemClick = { _, _ ->
+                    //TODO something
                 }
             }
         }

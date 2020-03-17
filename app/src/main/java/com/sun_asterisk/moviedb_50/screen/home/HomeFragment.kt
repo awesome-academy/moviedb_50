@@ -21,7 +21,6 @@ import com.sun_asterisk.moviedb_50.screen.home.adapter.SliderViewPagerAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
@@ -74,17 +73,19 @@ class HomeFragment : Fragment(),
     }
 
     override fun onError(exception: Exception?) {
-        Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_SHORT).show()
+        exception?.let {
+            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     override fun onLoading(isLoad: Boolean) {
         view?.run {
-            when (isLoad) {
-                false -> homeProgressBarLayout.visibility = View.VISIBLE
-                true -> {
-                    homeSwipeRefresh.isRefreshing = false
-                    homeProgressBarLayout.visibility = View.GONE
-                }
+            if (!isLoad) {
+                homeProgressBarLayout.visibility = View.VISIBLE
+            } else {
+                homeSwipeRefresh.isRefreshing = false
+                homeProgressBarLayout.visibility = View.GONE
             }
         }
     }
@@ -127,21 +128,22 @@ class HomeFragment : Fragment(),
                         }
 
                         override fun onTabSelected(tab: TabLayout.Tab?) {
-                            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-                                tab?.let { genresSelected = genres[it.position].genresID }
-                                presenter.getMovie(
-                                    Constant.BASE_GENRES_ID,
-                                    genresSelected.toString()
-                                )
-                            } else {
-                                onLoading(true)
-                                Toast.makeText(
-                                    activity,
-                                    getString(R.string.check_internet_fail),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            activity?.let {
+                                if (NetworkUtil.isConnectedToNetwork(it)) {
+                                    tab?.let { genresSelected = genres[it.position].genresID }
+                                    presenter.getMovie(
+                                        Constant.BASE_GENRES_ID,
+                                        genresSelected.toString()
+                                    )
+                                } else {
+                                    onLoading(true)
+                                    Toast.makeText(
+                                        it,
+                                        getString(R.string.check_internet_fail),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-
                         }
                     })
                 movieByKeyTabLayout.getTabAt(0)?.select()
@@ -194,33 +196,37 @@ class HomeFragment : Fragment(),
 
     private fun initPresenter() {
         presenter.setView(this)
-        if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-            presenter.onStart()
-        } else {
-            onLoading(true)
-            Toast.makeText(
-                activity,
-                getString(R.string.check_internet_fail),
-                Toast.LENGTH_SHORT
-            ).show()
+        activity?.let {
+            if (NetworkUtil.isConnectedToNetwork(it)) {
+                presenter.onStart()
+            } else {
+                onLoading(true)
+                Toast.makeText(
+                    it,
+                    getString(R.string.check_internet_fail),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
     private fun initRefresh() {
-        homeSwipeRefresh.setOnRefreshListener {
-            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-                presenter.onStart()
-                presenter.getMovie(
-                    Constant.BASE_GENRES_ID,
-                    genresSelected.toString()
-                )
-            } else {
-                onLoading(true)
-                Toast.makeText(
-                    activity,
-                    getString(R.string.check_internet_fail),
-                    Toast.LENGTH_SHORT
-                ).show()
+        view?.homeSwipeRefresh?.setOnRefreshListener {
+            activity?.let {
+                if (NetworkUtil.isConnectedToNetwork(it)) {
+                    presenter.onStart()
+                    presenter.getMovie(
+                        Constant.BASE_GENRES_ID,
+                        genresSelected.toString()
+                    )
+                } else {
+                    onLoading(true)
+                    Toast.makeText(
+                        it,
+                        getString(R.string.check_internet_fail),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
@@ -230,12 +236,15 @@ class HomeFragment : Fragment(),
             if (NetworkUtil.isConnectedToNetwork(it)) {
                 it.supportFragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .add(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(movie.movieID,movie.movieTitle))
+                    .add(
+                        R.id.mainFrameLayout,
+                        MovieDetailsFragment.getInstance(movie.movieID, movie.movieTitle)
+                    )
                     .addToBackStack(null)
                     .commit()
             } else {
                 Toast.makeText(
-                    activity,
+                    it,
                     getString(R.string.check_internet_fail),
                     Toast.LENGTH_SHORT
                 ).show()

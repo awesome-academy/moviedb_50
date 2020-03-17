@@ -129,7 +129,6 @@
                     android:drawableStart="@drawable/ic_av_timer"
                     android:drawablePadding="@dimen/dp_8"
                     android:gravity="center"
-                    android:text="@string/date_text"
                     android:textColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/releaseDateLabel"
                     app:layout_constraintStart_toStartOf="@+id/releaseDateLabel"

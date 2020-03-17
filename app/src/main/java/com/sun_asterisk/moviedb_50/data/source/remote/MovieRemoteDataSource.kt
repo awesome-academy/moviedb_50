@@ -37,12 +37,8 @@ class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
                 } +
                 Constant.BASE_API_KEY +
                 Constant.BASE_LANGUAGE +
-                if (page > 0) {
-                    Constant.BASE_PAGE +
-                            page
-                } else {
-                    ""
-                } +
+                Constant.BASE_PAGE +
+                page +
                 when (type) {
                     Constant.BASE_GENRES_ID -> type + query
                     Constant.BASE_CAST_ID -> type + query
