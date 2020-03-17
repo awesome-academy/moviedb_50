@@ -16,7 +16,7 @@ data class Cast(
     object CastEntry {
         const val CREDITS = "credits"
         const val CAST = "cast"
-        const val ID = "cast_id"
+        const val ID = "id"
         const val NAME = "name"
         const val PROFILE_PATH = "profile_path"
     }

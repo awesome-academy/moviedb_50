@@ -201,11 +201,8 @@ class HomeFragment : Fragment(),
                 presenter.onStart()
             } else {
                 onLoading(true)
-                Toast.makeText(
-                    it,
-                    getString(R.string.check_internet_fail),
-                    Toast.LENGTH_SHORT
-                ).show()
+                val message = getString(R.string.check_internet_fail)
+                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -221,11 +218,8 @@ class HomeFragment : Fragment(),
                     )
                 } else {
                     onLoading(true)
-                    Toast.makeText(
-                        it,
-                        getString(R.string.check_internet_fail),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val message = getString(R.string.check_internet_fail)
+                    Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -233,21 +227,17 @@ class HomeFragment : Fragment(),
 
     private fun addFragment(movie: Movie) {
         activity?.let {
+            val fragment =
+                MovieDetailsFragment.getInstance(movie.movieID, movie.movieTitle)
             if (NetworkUtil.isConnectedToNetwork(it)) {
                 it.supportFragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .add(
-                        R.id.mainFrameLayout,
-                        MovieDetailsFragment.getInstance(movie.movieID, movie.movieTitle)
-                    )
+                    .add(R.id.mainFrameLayout, fragment)
                     .addToBackStack(null)
                     .commit()
             } else {
-                Toast.makeText(
-                    it,
-                    getString(R.string.check_internet_fail),
-                    Toast.LENGTH_SHORT
-                ).show()
+                val message = getString(R.string.check_internet_fail)
+                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

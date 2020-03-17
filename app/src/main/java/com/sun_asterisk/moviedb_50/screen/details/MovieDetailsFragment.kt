@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.chip.Chip
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.*
@@ -21,6 +22,7 @@ import com.sun_asterisk.moviedb_50.screen.MainActivity
 import com.sun_asterisk.moviedb_50.screen.details.adapter.CastAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.ProduceAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.TrailerAdapter
+import com.sun_asterisk.moviedb_50.screen.listmovie.ListMovieFragment
 import com.sun_asterisk.moviedb_50.utils.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 
@@ -79,9 +81,13 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                     genresChip.run {
                         id = item.genresID
                         text = item.genresName
-                        setOnCheckedChangeListener { _, isChecked ->
+                        setOnCheckedChangeListener { buttonView, isChecked ->
                             if (isChecked) {
-                                //TODO something
+                                addFragment(
+                                    Constant.BASE_GENRES_ID,
+                                    buttonView.id.toString(),
+                                    buttonView.text.toString()
+                                )
                             }
                         }
                     }
@@ -128,8 +134,8 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                 arguments?.let { presenter.getMovieDetails(it.getInt(Constant.BASE_VALUE)) }
             } else {
                 onLoading(true)
-                Toast.makeText(activity, getString(R.string.check_internet_fail), Toast.LENGTH_LONG)
-                    .show()
+                val message = getString(R.string.check_internet_fail)
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -157,12 +163,8 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                     }
                 } else {
                     onLoading(true)
-                    Toast.makeText(
-                            activity,
-                            getString(R.string.check_internet_fail),
-                            Toast.LENGTH_LONG
-                        )
-                        .show()
+                    val message = getString(R.string.check_internet_fail)
+                    Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -172,14 +174,18 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         view?.run {
             castsRecyclerView.setHasFixedSize(true)
             castsRecyclerView.adapter = castAdapter.apply {
-                onItemClick = { _, _ ->
-                    //TODO something
+                onItemClick = { cast, _ ->
+                    addFragment(Constant.BASE_CAST_ID, cast.castId.toString(), cast.castName)
                 }
             }
             producesRecyclerView.setHasFixedSize(true)
             producesRecyclerView.adapter = produceAdapter.apply {
-                onItemClick = { _, _ ->
-                    //TODO something
+                onItemClick = { produce, _ ->
+                    addFragment(
+                        Constant.BASE_PRODUCE_ID,
+                        produce.produceID.toString(),
+                        produce.produceName
+                    )
                 }
             }
             moviesTrailerRecyclerView.setHasFixedSize(true)
@@ -203,6 +209,22 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
             }
             toolbar.setNavigationOnClickListener {
                 activity?.run { supportFragmentManager.popBackStack() }
+            }
+        }
+    }
+
+    private fun addFragment(type: String, query: String, title: String) {
+        activity?.let {
+            val fragment = ListMovieFragment.getInstance(type, query, title)
+            if (NetworkUtil.isConnectedToNetwork(it)) {
+                it.supportFragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.mainFrameLayout, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                val message = getString(R.string.check_internet_fail)
+                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
