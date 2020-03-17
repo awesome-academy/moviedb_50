@@ -19,6 +19,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
     }
 
     override fun getMovieDetails(movieID: Int) {
+        view?.onLoading(false)
         movieRepository.getMovieDetails(
             movieID,
             object : OnFetchDataJsonListener<MovieDetailsResponse> {
@@ -35,6 +36,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
                         onGetGenresSuccess(data.genres)
                         onGetMovieTrailerSuccess(data.trailers)
                     }
+                    view?.onLoading(true)
                 }
             })
     }

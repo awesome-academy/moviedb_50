@@ -17,11 +17,11 @@ class MovieRepository private constructor(
 
     fun getMovies(
         type: String,
+        query: String,
         page: Int,
-        genresID: Int,
         listener: OnFetchDataJsonListener<MoviesResponse>
     ) {
-        remoteMovieDataSource.getMovie(type, page, genresID, listener)
+        remoteMovieDataSource.getMovies(type, query, page, listener)
     }
 
     fun getMovieDetails(

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Genres
@@ -20,7 +21,6 @@ import com.sun_asterisk.moviedb_50.screen.home.adapter.SliderViewPagerAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
@@ -31,7 +31,7 @@ class HomeFragment : Fragment(),
     private val popularAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val movieByIDAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val movieSlideAdapter: SliderViewPagerAdapter by lazy { SliderViewPagerAdapter() }
-    private var genresSelected: Int = 0
+    private var genresSelected = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,23 +73,25 @@ class HomeFragment : Fragment(),
     }
 
     override fun onError(exception: Exception?) {
-        Toast.makeText(activity, exception?.message.toString(), Toast.LENGTH_SHORT).show()
+        exception?.let {
+            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     override fun onLoading(isLoad: Boolean) {
         view?.run {
-            when (isLoad) {
-                false -> homeProgressBarLayout.visibility = View.VISIBLE
-                true -> {
-                    homeSwipeRefresh.isRefreshing = false
-                    homeProgressBarLayout.visibility = View.GONE
-                }
+            if (!isLoad) {
+                homeProgressBarLayout.visibility = View.VISIBLE
+            } else {
+                homeSwipeRefresh.isRefreshing = false
+                homeProgressBarLayout.visibility = View.GONE
             }
         }
     }
 
     override fun click(item: Movie?) {
-        item?.let { addFragment(it.movieID) }
+        item?.let { addFragment(it) }
     }
 
     private fun initComponents() {
@@ -114,9 +116,8 @@ class HomeFragment : Fragment(),
                 }
                 genresSelected = genres[0].genresID
                 presenter.getMovie(
-                    Constant.BASE_MOVIE_BY_ID,
-                    Constant.BASE_PAGE_DEFAULT,
-                    genresSelected
+                    Constant.BASE_GENRES_ID,
+                    genresSelected.toString()
                 )
                 movieByKeyTabLayout?.addOnTabSelectedListener(
                     object : TabLayout.OnTabSelectedListener {
@@ -127,22 +128,22 @@ class HomeFragment : Fragment(),
                         }
 
                         override fun onTabSelected(tab: TabLayout.Tab?) {
-                            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-                                tab?.let { genresSelected = genres[it.position].genresID }
-                                presenter.getMovie(
-                                    Constant.BASE_MOVIE_BY_ID,
-                                    Constant.BASE_PAGE_DEFAULT,
-                                    genresSelected
-                                )
-                            } else {
-                                onLoading(true)
-                                Toast.makeText(
-                                    activity,
-                                    getString(R.string.check_internet_fail),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            activity?.let {
+                                if (NetworkUtil.isConnectedToNetwork(it)) {
+                                    tab?.let { genresSelected = genres[it.position].genresID }
+                                    presenter.getMovie(
+                                        Constant.BASE_GENRES_ID,
+                                        genresSelected.toString()
+                                    )
+                                } else {
+                                    onLoading(true)
+                                    Toast.makeText(
+                                        it,
+                                        getString(R.string.check_internet_fail),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-
                         }
                     })
                 movieByKeyTabLayout.getTabAt(0)?.select()
@@ -155,19 +156,19 @@ class HomeFragment : Fragment(),
             popularRecyclerView.setHasFixedSize(true)
             popularRecyclerView.adapter = popularAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             upcomingRecyclerView.setHasFixedSize(true)
             upcomingRecyclerView.adapter = upcomingAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             movieByGenresRecyclerView.setHasFixedSize(true)
             movieByGenresRecyclerView.adapter = movieByIDAdapter.apply {
                 onItemClick = { item, _ ->
-                    addFragment(item.movieID)
+                    addFragment(item)
                 }
             }
             sliderViewPager?.adapter = movieSlideAdapter
@@ -195,31 +196,13 @@ class HomeFragment : Fragment(),
 
     private fun initPresenter() {
         presenter.setView(this)
-        if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
-            presenter.onStart()
-        } else {
-            onLoading(true)
-            Toast.makeText(
-                activity,
-                getString(R.string.check_internet_fail),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun initRefresh() {
-        homeSwipeRefresh.setOnRefreshListener {
-            if (activity?.let { NetworkUtil.isConnectedToNetwork(it) } == true) {
+        activity?.let {
+            if (NetworkUtil.isConnectedToNetwork(it)) {
                 presenter.onStart()
-                presenter.getMovie(
-                    Constant.BASE_MOVIE_BY_ID,
-                    Constant.BASE_PAGE_DEFAULT,
-                    genresSelected
-                )
             } else {
                 onLoading(true)
                 Toast.makeText(
-                    activity,
+                    it,
                     getString(R.string.check_internet_fail),
                     Toast.LENGTH_SHORT
                 ).show()
@@ -227,16 +210,41 @@ class HomeFragment : Fragment(),
         }
     }
 
-    private fun addFragment(id: Int) {
+    private fun initRefresh() {
+        view?.homeSwipeRefresh?.setOnRefreshListener {
+            activity?.let {
+                if (NetworkUtil.isConnectedToNetwork(it)) {
+                    presenter.onStart()
+                    presenter.getMovie(
+                        Constant.BASE_GENRES_ID,
+                        genresSelected.toString()
+                    )
+                } else {
+                    onLoading(true)
+                    Toast.makeText(
+                        it,
+                        getString(R.string.check_internet_fail),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun addFragment(movie: Movie) {
         activity?.let {
             if (NetworkUtil.isConnectedToNetwork(it)) {
                 it.supportFragmentManager.beginTransaction()
-                    .add(R.id.mainFrameLayout, MovieDetailsFragment.getInstance(id))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .add(
+                        R.id.mainFrameLayout,
+                        MovieDetailsFragment.getInstance(movie.movieID, movie.movieTitle)
+                    )
                     .addToBackStack(null)
                     .commit()
             } else {
                 Toast.makeText(
-                    activity,
+                    it,
                     getString(R.string.check_internet_fail),
                     Toast.LENGTH_SHORT
                 ).show()

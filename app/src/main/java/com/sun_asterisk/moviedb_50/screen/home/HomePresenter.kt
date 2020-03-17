@@ -1,6 +1,5 @@
 package com.sun_asterisk.moviedb_50.screen.home
 
-import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
@@ -39,11 +38,11 @@ class HomePresenter(private val movieRepository: MovieRepository) : HomeContract
         })
     }
 
-    override fun getMovie(type: String, page: Int, genresID: Int) {
+    override fun getMovie(type: String, query: String, page: Int) {
         movieRepository.getMovies(
             type,
+            query,
             page,
-            genresID,
             object : OnFetchDataJsonListener<MoviesResponse> {
 
                 override fun onError(e: Exception) {
@@ -59,7 +58,7 @@ class HomePresenter(private val movieRepository: MovieRepository) : HomeContract
                             view?.onGetMoviesUpcomingSuccess(data.list)
                         Constant.BASE_POPULAR ->
                             view?.onGetMoviesPopularSuccess(data.list)
-                        Constant.BASE_MOVIE_BY_ID ->
+                        Constant.BASE_GENRES_ID ->
                             view?.onGetMoviesByGenresIDSuccess(data.list)
                     }
                     view?.onLoading(true)

@@ -18,10 +18,10 @@ interface MovieDataSource {
 
         fun getGenres(listener: OnFetchDataJsonListener<GenresResponse>)
 
-        fun getMovie(
+        fun getMovies(
             type: String,
+            query: String,
             page: Int,
-            genresID: Int,
             listener: OnFetchDataJsonListener<MoviesResponse>
         )
 

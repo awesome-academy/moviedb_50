@@ -26,8 +26,9 @@ interface HomeContract {
         fun getGenres()
         fun getMovie(
             type: String,
-            page: Int = Constant.BASE_PAGE_DEFAULT,
-            genresID: Int = Constant.BASE_GENRES_ID_DEFAULT
+            query: String = Constant.BASE_QUERY_DEFAULT,
+            page: Int = Constant.BASE_PAGE_DEFAULT
+
         )
     }
 }

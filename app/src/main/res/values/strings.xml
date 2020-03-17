@@ -12,4 +12,11 @@
     <string name="title_no">No</string>
     <string name="title_exit_app">Exit the application</string>
     <string name="notification_exit_app">Are you sure want to exit?</string>
+    <string name="release_date">Release date</string>
+    <string name="vote">Votes</string>
+    <string name="favorite">Favorite</string>
+    <string name="produces">Produces</string>
+    <string name="casts">Casts</string>
+    <string name="vote_text">0.0</string>
+    <string name="trailer">Trailers</string>
 </resources>
