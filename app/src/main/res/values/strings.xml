@@ -12,6 +12,7 @@
     <string name="title_no">No</string>
     <string name="title_exit_app">Exit the application</string>
     <string name="notification_exit_app">Are you sure want to exit?</string>
+    <string name="notification_nullable">Not found value</string>
     <string name="release_date">Release date</string>
     <string name="vote">Votes</string>
     <string name="favorite">Favorite</string>
