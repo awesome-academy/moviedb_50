@@ -1,6 +1,6 @@
 package com.sun_asterisk.moviedb_50.data.source.remote
 
-interface OnFetchDataJsonListener<T> {
+interface OnDataLoadedCallback<T> {
     fun onSuccess(data: T?)
     fun onError(e: Exception)
 }

@@ -1,13 +1,13 @@
 package com.sun_asterisk.moviedb_50.screen.navigation
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.sun_asterisk.moviedb_50.R
+import com.sun_asterisk.moviedb_50.screen.MainActivity
 import com.sun_asterisk.moviedb_50.screen.home.HomeFragment
+import com.sun_asterisk.moviedb_50.screen.search.SearchFragment
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 class ContainerFragment : Fragment() {
     private var startingPosition = 0
@@ -17,8 +17,14 @@ class ContainerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        loadFragment(HomeFragment(), startingPosition)
         return inflater.inflate(R.layout.fragment_container, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+        initToolBar()
+        loadFragment(HomeFragment(), startingPosition)
     }
 
     private fun loadFragment(fragment: Fragment, position: Int): Boolean {
@@ -31,7 +37,6 @@ class ContainerFragment : Fragment() {
                             R.anim.right_to_left,
                             R.anim.exit_right_to_left
                         ).replace(R.id.containerFrameLayout, fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
                 startingPosition < position -> {
@@ -41,7 +46,6 @@ class ContainerFragment : Fragment() {
                             R.anim.left_to_right,
                             R.anim.exit_left_to_right
                         ).replace(R.id.containerFrameLayout, fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
                 else -> {
@@ -53,5 +57,33 @@ class ContainerFragment : Fragment() {
         }
         startingPosition = position
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.search, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.searchView) {
+            activity?.run {
+                supportFragmentManager.beginTransaction().setCustomAnimations(
+                        R.anim.right_to_left,
+                        R.anim.exit_right_to_left,
+                        R.anim.left_to_right,
+                        R.anim.exit_left_to_right
+                    ).add(R.id.mainFrameLayout, SearchFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+        return false
+    }
+
+    private fun initToolBar() {
+        view?.toolbar?.let {
+            (activity as? MainActivity)?.run { setSupportActionBar(it)
+            }
+        }
     }
 }
