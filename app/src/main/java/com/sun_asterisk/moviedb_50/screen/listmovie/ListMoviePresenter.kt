@@ -3,6 +3,7 @@ package com.sun_asterisk.moviedb_50.screen.listmovie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
+import com.sun_asterisk.moviedb_50.utils.Constant
 
 class ListMoviePresenter(private val movieRepository: MovieRepository) :
     ListMovieContract.Presenter {
@@ -13,7 +14,9 @@ class ListMoviePresenter(private val movieRepository: MovieRepository) :
     }
 
     override fun getMovies(type: String, query: String, page: Int) {
-        view?.onLoading(false)
+        if (page == Constant.BASE_PAGE_DEFAULT) {
+            view?.onLoading(false)
+        }
         movieRepository.getMovies(
             type,
             query,
@@ -26,6 +29,7 @@ class ListMoviePresenter(private val movieRepository: MovieRepository) :
 
                 override fun onSuccess(data: MoviesResponse?) {
                     data ?: return
+                    view?.onGetMovieResultPage(data.movieResultPage)
                     view?.onGetMoviesSuccess(data.list)
                     view?.onLoading(true)
                 }

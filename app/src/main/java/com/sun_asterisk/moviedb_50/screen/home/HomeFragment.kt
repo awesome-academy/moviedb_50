@@ -81,11 +81,11 @@ class HomeFragment : Fragment(),
 
     override fun onLoading(isLoad: Boolean) {
         view?.run {
-            if (!isLoad) {
-                homeProgressBarLayout.visibility = View.VISIBLE
-            } else {
+            if (isLoad) {
                 homeSwipeRefresh.isRefreshing = false
-                homeProgressBarLayout.visibility = View.GONE
+                frameProgressBarMovie.visibility = View.GONE
+            } else {
+                frameProgressBarMovie.visibility = View.VISIBLE
             }
         }
     }

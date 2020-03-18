@@ -6,6 +6,6 @@ import org.json.JSONObject
 
 data class GenresResponse(var list: List<Genres>) {
     constructor(jsonObject: JSONObject) : this(
-        list = ParseDataToObject().parJsonToGenres(jsonObject)
+        list = ParseDataToObject.parJsonToGenres(jsonObject)
     )
 }
