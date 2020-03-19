@@ -10,9 +10,9 @@ import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsRespo
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
 
-class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
+class MovieRemoteDataSource : MovieDataSource.Remote {
 
-    override fun getGenres(listener: OnFetchDataJsonListener<GenresResponse>) {
+    override fun getGenres(listener: OnDataLoadedCallback<GenresResponse>) {
         val url =
             Constant.BASE_URL +
                     Constant.BASE_GENRES_LIST +
@@ -25,7 +25,7 @@ class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
         type: String,
         query: String,
         page: Int,
-        listener: OnFetchDataJsonListener<MoviesResponse>
+        listener: OnDataLoadedCallback<MoviesResponse>
     ) {
 
         val url = Constant.BASE_URL +
@@ -51,7 +51,7 @@ class MovieRemoteDataSource : MovieDataSource.RemoteDataSource {
 
     override fun getMovieDetails(
         movieID: Int,
-        listener: OnFetchDataJsonListener<MovieDetailsResponse>
+        listener: OnDataLoadedCallback<MovieDetailsResponse>
     ) {
         val url = Constant.BASE_URL +
                 Constant.BASE_MOVIE +

@@ -41,7 +41,7 @@ class HomeFragment : Fragment(),
         val movieRepository: MovieRepository =
             MovieRepository.getInstance(
                 MovieRemoteDataSource.getInstance(),
-                MovieLocalDataSource
+                MovieLocalDataSource.getInstance()
             )
         presenter = HomePresenter(movieRepository)
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -232,7 +232,7 @@ class HomeFragment : Fragment(),
             if (NetworkUtil.isConnectedToNetwork(it)) {
                 it.supportFragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .add(R.id.mainFrameLayout, fragment)
+                    .replace(R.id.mainFrameLayout, fragment)
                     .addToBackStack(null)
                     .commit()
             } else {

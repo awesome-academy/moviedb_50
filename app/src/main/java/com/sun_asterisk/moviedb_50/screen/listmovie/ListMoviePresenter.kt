@@ -1,7 +1,7 @@
 package com.sun_asterisk.moviedb_50.screen.listmovie
 
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
-import com.sun_asterisk.moviedb_50.data.source.remote.OnFetchDataJsonListener
+import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
 
@@ -21,7 +21,7 @@ class ListMoviePresenter(private val movieRepository: MovieRepository) :
             type,
             query,
             page,
-            object : OnFetchDataJsonListener<MoviesResponse> {
+            object : OnDataLoadedCallback<MoviesResponse> {
 
                 override fun onError(e: Exception) {
                     view?.onError(e)

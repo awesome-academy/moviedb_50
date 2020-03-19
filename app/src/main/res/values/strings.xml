@@ -2,6 +2,7 @@
     <string name="app_name">Movie Time</string>
     <string name="movie_name">I Will Find You A Better Home</string>
     <string name="navigation_home">Home</string>
+    <string name="menu_search">Search</string>
     <string name="navigation_favorite">Favorite</string>
     <string name="movies">Movies</string>
     <string name="popular">Popular</string>
@@ -21,4 +22,5 @@
     <string name="vote_text">0.0</string>
     <string name="trailer">Trailers</string>
     <string name="results_found">Found %1$d results</string>
+    <string name="message_null_result">Result is null</string>
 </resources>

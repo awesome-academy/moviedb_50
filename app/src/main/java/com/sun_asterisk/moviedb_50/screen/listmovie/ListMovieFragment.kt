@@ -40,7 +40,7 @@ class ListMovieFragment : Fragment(), ListMovieContract.View {
         val movieRepository: MovieRepository =
             MovieRepository.getInstance(
                 MovieRemoteDataSource.getInstance(),
-                MovieLocalDataSource
+                MovieLocalDataSource.getInstance()
             )
         presenter = ListMoviePresenter(movieRepository)
     }
