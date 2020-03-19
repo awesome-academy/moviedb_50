@@ -17,6 +17,8 @@ object Constant {
     const val BASE_POPULAR = "/movie/popular"
     const val BASE_TOP_RATE = "/movie/top_rated"
     const val BASE_UPCOMING = "/movie/upcoming"
+    const val BASE_DATABASE_NAME = "favorites.db"
+    const val BASE_DATABASE_VERSION = 1
     const val BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500"
     const val BASE_LANGUAGE = "&language=en-US"
     const val BASE_API_KEY = "?api_key=" + BuildConfig.API_KEY
@@ -33,4 +35,8 @@ object Constant {
     const val BASE_TITLE = "title"
     const val BASE_SEARCH = "/search/movie"
     const val BASE_QUERY = "&query="
+    const val BASE_NOTIFY_ADD_FAVORITE_SUCCESS = "add success"
+    const val BASE_NOTIFY_ADD_FAVORITE_ERROR = "add error"
+    const val BASE_NOTIFY_DELETE_FAVORITE_SUCCESS = "delete success"
+    const val BASE_NOTIFY_DELETE_FAVORITE_ERROR = "delete error"
 }

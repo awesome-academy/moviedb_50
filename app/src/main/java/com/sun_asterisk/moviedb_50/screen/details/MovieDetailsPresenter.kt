@@ -1,8 +1,10 @@
 package com.sun_asterisk.moviedb_50.screen.details
 
+import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
+import com.sun_asterisk.moviedb_50.utils.Constant
 
 class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
     MovieDetailsContract.Presenter {
@@ -37,7 +39,78 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
                         onGetMovieTrailerSuccess(data.trailers)
                     }
                     view?.onLoading(true)
+                    isFavoriteMovie(movieID.toString())
                 }
             })
+    }
+
+    private fun isFavoriteMovie(movieID: String) {
+        movieRepository.findFavoriteId(movieID, object : OnDataLoadedCallback<Boolean> {
+            override fun onSuccess(data: Boolean?) {
+                data ?: return
+                view?.showFavoriteImage(
+                    if (data) Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS
+                    else Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS
+                )
+            }
+
+            override fun onError(e: Exception) {
+                view?.onError(e)
+            }
+
+        })
+    }
+
+    override fun handleFavorites(favorite: Favorite) {
+        movieRepository.findFavoriteId(favorite.movieID, object : OnDataLoadedCallback<Boolean> {
+            override fun onSuccess(data: Boolean?) {
+                data ?: return
+                if (data) deleteFavorite(favorite.movieID) else addFavorite(favorite)
+            }
+
+            override fun onError(e: Exception) {
+                view?.onError(e)
+            }
+        })
+    }
+
+    private fun addFavorite(favorite: Favorite) {
+        movieRepository.addFavorite(favorite, object : OnDataLoadedCallback<Boolean> {
+            override fun onSuccess(data: Boolean?) {
+                data ?: return
+                view?.run {
+                    if (data) {
+                        showFavoriteImage(Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS)
+                        notifyFavorite(Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS)
+                    } else {
+                        notifyFavorite(Constant.BASE_NOTIFY_ADD_FAVORITE_ERROR)
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                view?.onError(e)
+            }
+        })
+    }
+
+    private fun deleteFavorite(movieID: String) {
+        movieRepository.deleteFavorite(movieID, object : OnDataLoadedCallback<Boolean> {
+            override fun onSuccess(data: Boolean?) {
+                data ?: return
+                view?.run {
+                    if (data) {
+                        showFavoriteImage(Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS)
+                        notifyFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS)
+                    } else {
+                        notifyFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_ERROR)
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                view?.onError(e)
+            }
+        })
     }
 }

@@ -26,4 +26,9 @@
     <string name="trailer">Trailers</string>
     <string name="results_found">Found %1$d results</string>
     <string name="message_null_result">Result is null</string>
+    <string name="nothing_found">Nothing Found</string>
+    <string name="notification_delete_success">Delete favorite success</string>
+    <string name="notification_delete_failed">Delete favorite failed</string>
+    <string name="notification_add_favorite_success">This movie is added to favorite items</string>
+    <string name="notification_add_favorite_failed">This movie already has been added</string>
 </resources>

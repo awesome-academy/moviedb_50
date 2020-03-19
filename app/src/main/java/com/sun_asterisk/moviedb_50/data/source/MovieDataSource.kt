@@ -1,6 +1,7 @@
 package com.sun_asterisk.moviedb_50.data.source
 
 import com.sun_asterisk.moviedb_50.data.model.Category
+import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
@@ -12,6 +13,10 @@ interface MovieDataSource {
      */
     interface Local {
         fun getCategories(listener: OnDataLoadedCallback<List<Category>>)
+        fun getFavorites(listener: OnDataLoadedCallback<MutableList<Favorite>>)
+        fun addFavorite(favorite: Favorite, listener: OnDataLoadedCallback<Boolean>)
+        fun deleteFavorite(movieID: String, listener: OnDataLoadedCallback<Boolean>)
+        fun findFavoriteId(movieID: String, listener: OnDataLoadedCallback<Boolean>)
     }
 
     /**
@@ -28,7 +33,8 @@ interface MovieDataSource {
             listener: OnDataLoadedCallback<MoviesResponse>
         )
 
-        fun getMovieDetails(movieID: Int, listener:
+        fun getMovieDetails(
+            movieID: Int, listener:
             OnDataLoadedCallback<MovieDetailsResponse>
         )
     }
