@@ -27,6 +27,33 @@ class ContainerFragment : Fragment() {
         loadFragment(HomeFragment(), startingPosition)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.search_main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.ic_searchView) {
+            activity?.run {
+                supportFragmentManager.beginTransaction().setCustomAnimations(
+                        R.anim.right_to_left,
+                        R.anim.exit_right_to_left,
+                        R.anim.left_to_right,
+                        R.anim.exit_left_to_right
+                    ).replace(R.id.mainFrameLayout, SearchFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+        return false
+    }
+
+    private fun initToolBar() {
+        view?.toolbar?.let {
+            (activity as? MainActivity)?.run { setSupportActionBar(it) }
+        }
+    }
+
     private fun loadFragment(fragment: Fragment, position: Int): Boolean {
         activity?.run {
             when {
@@ -57,33 +84,5 @@ class ContainerFragment : Fragment() {
         }
         startingPosition = position
         return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.searchView) {
-            activity?.run {
-                supportFragmentManager.beginTransaction().setCustomAnimations(
-                        R.anim.right_to_left,
-                        R.anim.exit_right_to_left,
-                        R.anim.left_to_right,
-                        R.anim.exit_left_to_right
-                    ).add(R.id.mainFrameLayout, SearchFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-        return false
-    }
-
-    private fun initToolBar() {
-        view?.toolbar?.let {
-            (activity as? MainActivity)?.run { setSupportActionBar(it)
-            }
-        }
     }
 }

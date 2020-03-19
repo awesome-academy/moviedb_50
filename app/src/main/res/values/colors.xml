@@ -7,5 +7,6 @@
     <color name="colorOrange">#FF6F21</color>
     <color name="colorDarkBlue">#151C25</color>
     <color name="colorSliver">#333333</color>
+    <color name="colorBg">#23333333</color>
     <color name="colorCrystalClear">#77FFFFFF</color>
 </resources>

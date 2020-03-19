@@ -1,6 +1,7 @@
 package com.sun_asterisk.moviedb_50.screen.home
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,7 @@ class HomeFragment : Fragment(),
 
     private fun initComponents() {
         initAdapter()
+        onLoading(false)
         initPresenter()
         initRefresh()
     }
@@ -198,7 +200,7 @@ class HomeFragment : Fragment(),
         presenter.setView(this)
         activity?.let {
             if (NetworkUtil.isConnectedToNetwork(it)) {
-                presenter.onStart()
+                Handler().postDelayed({ presenter.onStart() }, 500)
             } else {
                 onLoading(true)
                 val message = getString(R.string.check_internet_fail)

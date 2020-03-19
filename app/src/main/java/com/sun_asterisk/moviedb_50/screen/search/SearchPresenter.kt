@@ -57,6 +57,7 @@ class SearchPresenter(private val movieRepository: MovieRepository) : SearchCont
     }
 
     override fun onStart() {
+        view?.onLoading(false)
         getGenres()
         getCategories()
         getMovies(Constant.BASE_TOP_RATE)
