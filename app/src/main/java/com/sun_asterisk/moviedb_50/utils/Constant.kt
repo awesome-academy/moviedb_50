@@ -31,6 +31,6 @@ object Constant {
     const val BASE_TYPE = "type"
     const val BASE_VALUE = "value"
     const val BASE_TITLE = "title"
-    const val BASE_SEARCH = "search/movie"
+    const val BASE_SEARCH = "/search/movie"
     const val BASE_QUERY = "&query="
 }
