@@ -14,6 +14,7 @@ import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.local.MovieLocalDataSource
+import com.sun_asterisk.moviedb_50.data.source.local.dao.FavoritesDaoImpl
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.screen.MainActivity
 import com.sun_asterisk.moviedb_50.screen.details.MovieDetailsFragment
@@ -32,12 +33,14 @@ class SearchFragment : Fragment(), SearchContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val movieRepository: MovieRepository =
-            MovieRepository.getInstance(
-                MovieRemoteDataSource.getInstance(),
-                MovieLocalDataSource.getInstance()
-            )
-        presenter = SearchPresenter(movieRepository)
+        context?.let {
+            val movieRepository: MovieRepository =
+                MovieRepository.getInstance(
+                    MovieRemoteDataSource.getInstance(),
+                    MovieLocalDataSource.getInstance(FavoritesDaoImpl.getInstance(it))
+                )
+            presenter = SearchPresenter(movieRepository)
+        }
     }
 
     override fun onCreateView(

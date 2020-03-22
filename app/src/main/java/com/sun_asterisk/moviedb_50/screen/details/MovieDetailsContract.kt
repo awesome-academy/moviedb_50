@@ -13,6 +13,8 @@ class MovieDetailsContract {
         fun onGetCastsSuccess(casts: List<Cast>)
         fun onGetProducesSuccess(produces: List<Produce>)
         fun onGetMovieTrailerSuccess(movieTrailers: List<MovieTrailer>)
+        fun showFavoriteImage(type: String)
+        fun notifyFavorite(type: String)
         fun onLoading(isLoad: Boolean)
         fun onError(exception: Exception?)
     }
@@ -22,5 +24,6 @@ class MovieDetailsContract {
      */
     interface Presenter : BasePresenter<View?> {
         fun getMovieDetails(movieID: Int)
+        fun handleFavorites(favorite: Favorite)
     }
 }

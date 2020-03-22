@@ -23,6 +23,10 @@ abstract class BaseAdapter<T, V : BaseViewHolder<T>> : RecyclerView.Adapter<V>()
         notifyDataSetChanged()
     }
 
+    open fun getItems(): List<T> {
+        return items
+    }
+
     fun insertData(insertItems: List<T>) = with(items) {
         val firstPosition = size
         addAll(insertItems)

@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/Home"
+        android:id="@+id/home"
         android:icon="@drawable/ic_home"
         android:title="@string/navigation_home"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/Favorite"
+        android:id="@+id/favorite"
         android:icon="@drawable/ic_favorite"
         android:title="@string/navigation_favorite"
         app:showAsAction="ifRoom" />

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 open class BaseViewHolder<T>(itemView: View, private var onItemClick: (T, Int) -> Unit) :
     RecyclerView.ViewHolder(itemView) {
 
-    private var itemData: T? = null
+    var itemData: T? = null
     private var itemPosition = -1
 
     init {

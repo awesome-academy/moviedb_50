@@ -1,6 +1,7 @@
 package com.sun_asterisk.moviedb_50.data.repository
 
 import com.sun_asterisk.moviedb_50.data.model.Category
+import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
@@ -34,6 +35,22 @@ class MovieRepository private constructor(
         listener: OnDataLoadedCallback<MovieDetailsResponse>?
     ) {
         listener?.let { remoteMovie.getMovieDetails(movieID, it) }
+    }
+
+    fun getFavorites(listener: OnDataLoadedCallback<MutableList<Favorite>>) {
+        localMovie.getFavorites(listener)
+    }
+
+    fun addFavorite(favorite: Favorite, listener: OnDataLoadedCallback<Boolean>) {
+        localMovie.addFavorite(favorite, listener)
+    }
+
+    fun deleteFavorite(movieID: String, listener: OnDataLoadedCallback<Boolean>) {
+        localMovie.deleteFavorite(movieID, listener)
+    }
+
+    fun findFavoriteId(movieID: String, listener: OnDataLoadedCallback<Boolean>) {
+        localMovie.findFavoriteId(movieID, listener)
     }
 
     companion object {

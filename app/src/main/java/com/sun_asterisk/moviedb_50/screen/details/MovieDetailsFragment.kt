@@ -1,6 +1,9 @@
 package com.sun_asterisk.moviedb_50.screen.details
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,33 +19,38 @@ import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.*
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.local.MovieLocalDataSource
+import com.sun_asterisk.moviedb_50.data.source.local.dao.FavoritesDaoImpl
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.screen.MainActivity
 import com.sun_asterisk.moviedb_50.screen.details.adapter.CastAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.ProduceAdapter
 import com.sun_asterisk.moviedb_50.screen.details.adapter.TrailerAdapter
 import com.sun_asterisk.moviedb_50.screen.listmovie.ListMovieFragment
-import com.sun_asterisk.moviedb_50.utils.Constant
-import com.sun_asterisk.moviedb_50.utils.GetImageAsyncTask
-import com.sun_asterisk.moviedb_50.utils.NetworkUtil
-import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
+import com.sun_asterisk.moviedb_50.utils.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import kotlinx.android.synthetic.main.toolbar_base.*
+import java.io.ByteArrayOutputStream
+
 
 class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
     private lateinit var presenter: MovieDetailsContract.Presenter
+    private lateinit var movieFavorite: Movie
     private val castAdapter: CastAdapter by lazy { CastAdapter() }
     private val produceAdapter: ProduceAdapter by lazy { ProduceAdapter() }
     private val trailerAdapter: TrailerAdapter by lazy { TrailerAdapter() }
+    private var strMoviePoster: String? = null
+    private var byteArrayPoster: ByteArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val movieRepository: MovieRepository =
-            MovieRepository.getInstance(
-                MovieRemoteDataSource.getInstance(),
-                MovieLocalDataSource.getInstance()
-            )
-        presenter = MovieDetailsPresenter(movieRepository)
+        context?.let {
+            val movieRepository: MovieRepository =
+                MovieRepository.getInstance(
+                    MovieRemoteDataSource.getInstance(),
+                    MovieLocalDataSource.getInstance(FavoritesDaoImpl.getInstance(it))
+                )
+            presenter = MovieDetailsPresenter(movieRepository)
+        }
     }
 
     override fun onCreateView(
@@ -59,6 +67,7 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         initPresenter()
         initRefresh()
         initAdapter()
+        initFavoriteHandle()
     }
 
     override fun onGetMovieSuccess(movie: Movie) {
@@ -69,8 +78,10 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
             overViewTextView.text = movie.movieOverView
             getImageAsync(movie.movieBackdropPath, backdropImageView)
             getImageAsync(movie.moviePosterPath, posterImageView)
+            strMoviePoster = movie.moviePosterPath
             backdropImageView.animation =
                 AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
+            movieFavorite = movie
         }
     }
 
@@ -110,6 +121,27 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
 
     override fun onGetMovieTrailerSuccess(movieTrailers: List<MovieTrailer>) {
         trailerAdapter.updateData(movieTrailers)
+    }
+
+    override fun showFavoriteImage(type: String) {
+        if (type == Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS) {
+            view?.favoriteImageView?.setImageResource(R.drawable.ic_favorite)
+        } else {
+            view?.favoriteImageView?.setImageResource(R.drawable.ic_favorite_border)
+        }
+    }
+
+    override fun notifyFavorite(type: String) {
+        when (type) {
+            Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS ->
+                activity?.showSnackBar(R.string.notification_add_favorite_success)
+            Constant.BASE_NOTIFY_ADD_FAVORITE_ERROR ->
+                activity?.showSnackBar(R.string.notification_add_favorite_failed)
+            Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS ->
+                activity?.showSnackBar(R.string.notification_delete_success)
+            Constant.BASE_NOTIFY_DELETE_FAVORITE_ERROR ->
+                activity?.showSnackBar(R.string.notification_delete_failed)
+        }
     }
 
     override fun onLoading(isLoad: Boolean) {
@@ -152,7 +184,14 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                 }
 
                 override fun onImageLoaded(bitmap: Bitmap?) {
-                    bitmap?.let { imageView.setImageBitmap(bitmap) }
+                    if (bitmap !== null) {
+                        imageView.setImageBitmap(bitmap)
+                        if (strUrl == strMoviePoster) {
+                            byteArrayPoster = convertBitmapToByteArray(bitmap)
+                        }
+                    } else {
+                        byteArrayPoster = null
+                    }
                 }
             }).execute(Constant.BASE_URL_IMAGE + strUrl)
     }
@@ -193,10 +232,23 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
             }
             moviesTrailerRecyclerView.setHasFixedSize(true)
             moviesTrailerRecyclerView.adapter = trailerAdapter.apply {
-                onItemClick = { _, _ ->
-                    //TODO something
+                onItemClick = { movieTrailer, _ ->
+                    watchYoutubeVideo(movieTrailer.movieTrailerKey)
                 }
             }
+        }
+    }
+
+    private fun watchYoutubeVideo(id: String) {
+        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$id"))
+        val webIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("http://www.youtube.com/watch?v=$id")
+        )
+        try {
+            context?.startActivity(appIntent)
+        } catch (ex: ActivityNotFoundException) {
+            context?.startActivity(webIntent)
         }
     }
 
@@ -229,6 +281,18 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                 Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun initFavoriteHandle() {
+        view?.favoriteImageView?.setOnClickListener {
+            presenter.handleFavorites(Favorite(movieFavorite, byteArrayPoster))
+        }
+    }
+
+    private fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream)
+        return stream.toByteArray()
     }
 
     companion object {
